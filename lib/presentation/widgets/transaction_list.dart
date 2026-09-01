@@ -55,6 +55,7 @@ class TransactionList extends StatelessWidget {
     this.emptyMessage = 'No expenses yet.',
     this.nested = false,
     this.currencySymbol = kDefaultCurrencySymbol,
+    this.markThisMonth = false,
   });
 
   final List<Expense> transactions;
@@ -65,6 +66,7 @@ class TransactionList extends StatelessWidget {
   final String emptyMessage;
   final bool nested;
   final String currencySymbol;
+  final bool markThisMonth;
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +96,13 @@ class TransactionList extends StatelessWidget {
       for (final section in sections)
         _HistorySectionView(
           label: historySectionLabel(section.keyDate, grouping),
+          keyDate: section.keyDate,
           transactions: section.transactions,
           onEdit: onEdit,
           onDelete: onDelete,
           currencySymbol: currencySymbol,
+          isThisMonth: markThisMonth &&
+              calendarMonth(section.keyDate) == calendarMonth(),
         ),
     ];
 
@@ -118,42 +123,74 @@ class TransactionList extends StatelessWidget {
 class _HistorySectionView extends StatelessWidget {
   const _HistorySectionView({
     required this.label,
+    required this.keyDate,
     required this.transactions,
     this.onEdit,
     this.onDelete,
     required this.currencySymbol,
+    this.isThisMonth = false,
   });
 
   final String label;
+  final DateTime keyDate;
   final List<Expense> transactions;
   final void Function(Expense transaction)? onEdit;
   final Future<void> Function(Expense transaction)? onDelete;
   final String currencySymbol;
+  final bool isThisMonth;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            label,
-            style: theme.textTheme.titleSmall?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w600,
+    return ColoredBox(
+      color: isThisMonth
+          ? theme.colorScheme.primaryContainer.withValues(alpha: 0.28)
+          : Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                if (isThisMonth)
+                  Chip(
+                    key: ValueKey(
+                      'this-month-badge-${keyDate.millisecondsSinceEpoch}',
+                    ),
+                    visualDensity: VisualDensity.compact,
+                    label: const Text('This month'),
+                    padding: EdgeInsets.zero,
+                    side: BorderSide.none,
+                    backgroundColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.12,
+                    ),
+                    labelStyle: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+              ],
             ),
           ),
-        ),
-        for (final transaction in transactions)
-          TransactionListItem(
-            transaction: transaction,
-            currencySymbol: currencySymbol,
-            onTap: onEdit == null ? null : () => onEdit!(transaction),
-            onDelete: onDelete,
-          ),
-      ],
+          for (final transaction in transactions)
+            TransactionListItem(
+              transaction: transaction,
+              currencySymbol: currencySymbol,
+              onTap: onEdit == null ? null : () => onEdit!(transaction),
+              onDelete: onDelete,
+            ),
+        ],
+      ),
     );
   }
 }

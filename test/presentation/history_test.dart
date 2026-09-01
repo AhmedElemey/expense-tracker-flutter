@@ -189,4 +189,32 @@ void main() {
 
     expect(find.textContaining('No expenses yet'), findsOneWidget);
   });
+
+  testWidgets('history marks current-month sections as This month', (
+    tester,
+  ) async {
+    final now = DateTime.now();
+    final thisMonth = DateTime(now.year, now.month, 10, 12);
+    final lastMonth = DateTime(now.year, now.month - 1, 10, 12);
+    repository.items.addAll([
+      expense(id: 1, amount: 8, date: thisMonth, note: 'This month coffee'),
+      expense(id: 2, amount: 4, date: lastMonth, note: 'Last month bill'),
+    ]);
+
+    await tester.pumpWidget(app());
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('This month'), findsOneWidget);
+    expect(find.text('This month coffee'), findsOneWidget);
+    expect(find.text('Last month bill'), findsOneWidget);
+
+    await tester.tap(find.text('Month'));
+    await tester.pumpAndSettle();
+    expect(find.text('This month'), findsOneWidget);
+    expect(
+      find.text(DateFormat.yMMMM().format(DateTime(now.year, now.month))),
+      findsWidgets,
+    );
+  });
 }

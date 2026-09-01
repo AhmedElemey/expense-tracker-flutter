@@ -64,6 +64,7 @@ class HistoryScreen extends ConsumerWidget {
                 transactions: items,
                 grouping: grouping,
                 currencySymbol: currencySymbol,
+                markThisMonth: true,
                 emptyMessage: 'No expenses yet.\nAdd one from the home screen.',
                 onRefresh: () =>
                     ref.read(transactionsProvider.notifier).refresh(),
