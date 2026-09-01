@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/ads/mobile_ads_init.dart';
+import 'package:expensetracker/presentation/providers/ads_consent_provider.dart';
 import 'package:expensetracker/presentation/providers/locale_provider.dart';
 import 'package:expensetracker/presentation/screens/home_screen.dart';
 
@@ -18,6 +19,8 @@ class ExpenseTrackerApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localeCode = ref.watch(localeCodeProvider);
+    // Kick off UMP at launch so ads never request before consent is checked.
+    ref.watch(adsConsentProvider);
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
