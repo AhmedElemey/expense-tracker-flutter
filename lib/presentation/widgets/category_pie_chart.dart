@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/category_visuals.dart';
 import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/widgets/category_chip.dart';
@@ -31,9 +32,9 @@ class CategoryPieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final slices = _slices;
     if (slices.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.pie_chart_outline,
-        message: 'No spending to chart this month.',
+        message: AppLocalizations.of(context).noSpendingToChart,
       );
     }
 
@@ -96,7 +97,9 @@ class CategoryPieChart extends StatelessWidget {
           TextButton(
             onPressed: () => onCategoryTapped(selected!),
             child: Text(
-              'Show all · ${formatAmount(total, symbol: currencySymbol)} total',
+              AppLocalizations.of(context).showAllTotal(
+                formatAmount(total, symbol: currencySymbol),
+              ),
             ),
           ),
       ],

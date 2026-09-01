@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:expensetracker/l10n/app_localizations.dart';
+
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
@@ -52,7 +54,7 @@ class ErrorState extends StatelessWidget {
               const SizedBox(height: 12),
               FilledButton.tonal(
                 onPressed: onRetry,
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ],

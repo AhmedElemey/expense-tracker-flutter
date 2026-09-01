@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
+import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/widgets/category_chip.dart';
@@ -53,6 +54,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final currencySymbol = ref.watch(currencySymbolProvider);
     return Form(
       key: _formKey,
@@ -69,8 +71,8 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
               FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
             ],
             decoration: InputDecoration(
-              labelText: 'Amount',
-              hintText: '0.00',
+              labelText: l10n.amountLabel,
+              hintText: l10n.amountHint,
               prefixText: currencySymbol,
               prefixIcon: const Icon(Icons.attach_money),
             ),
@@ -81,12 +83,14 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
             key: const Key('expense-date'),
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.calendar_today),
-            title: const Text('Date'),
-            subtitle: Text(DateFormat.yMMMd().format(_date)),
+            title: Text(l10n.dateLabel),
+            subtitle: Text(
+              formatDay(_date, Localizations.localeOf(context).toString()),
+            ),
             onTap: _pickDate,
           ),
           const SizedBox(height: 8),
-          Text('Category', style: theme.textTheme.titleSmall),
+          Text(l10n.categoryLabel, style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -107,9 +111,9 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
             controller: _noteController,
             textCapitalization: TextCapitalization.sentences,
             maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Note (optional)',
-              prefixIcon: Icon(Icons.notes),
+            decoration: InputDecoration(
+              labelText: l10n.noteLabel,
+              prefixIcon: const Icon(Icons.notes),
             ),
           ),
           const SizedBox(height: 24),
@@ -117,7 +121,9 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
             key: const Key('expense-save'),
             onPressed: _saving ? null : _submit,
             child: Text(
-              _saving ? 'Saving…' : (_isEditing ? 'Save changes' : 'Save'),
+              _saving
+                  ? l10n.saving
+                  : (_isEditing ? l10n.saveChanges : l10n.save),
             ),
           ),
         ],
@@ -126,12 +132,13 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
   }
 
   String? _validateAmount(String? value) {
+    final l10n = AppLocalizations.of(context);
     final amount = _parseAmount(value);
     if (amount == null) {
-      return 'Enter an amount';
+      return l10n.enterAmount;
     }
     if (amount <= 0) {
-      return 'Amount must be greater than 0';
+      return l10n.amountMustBePositive;
     }
     return null;
   }
@@ -186,9 +193,11 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
         return;
       }
       setState(() => _saving = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Could not save expense: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).couldNotSaveExpense(error)),
+        ),
+      );
     }
   }
 

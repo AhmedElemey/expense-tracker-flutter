@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/main.dart';
+import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/screens/home_screen.dart';
@@ -77,7 +77,7 @@ void main() {
     await pumpDashboard(tester);
 
     expect(
-      find.text(DateFormat.yMMMM().format(DateTime(2026, 9))),
+      find.text(formatMonth(DateTime(2026, 9), 'en')),
       findsOneWidget,
     );
     expect(find.byKey(const Key('month-total')), findsOneWidget);
@@ -164,7 +164,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text(DateFormat.yMMMM().format(DateTime(2026, 9))),
+      find.text(formatMonth(DateTime(2026, 9), 'en')),
       findsOneWidget,
     );
     expect(find.text('September lunch'), findsOneWidget);

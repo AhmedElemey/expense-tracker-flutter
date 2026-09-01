@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/main.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
@@ -31,6 +33,28 @@ void main() {
     expect(find.text('Export data'), findsOneWidget);
     expect(find.text('Import data'), findsOneWidget);
     expect(find.byKey(const Key(r'currency-$')), findsOneWidget);
+    expect(find.byKey(const Key('language-en')), findsOneWidget);
+    expect(find.byKey(const Key('language-ar')), findsOneWidget);
+  });
+
+  testWidgets('switching to Arabic localizes settings and uses RTL', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(app());
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('language-ar')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('الإعدادات'), findsOneWidget);
+    expect(find.text('تصدير البيانات'), findsOneWidget);
+    expect(find.text('Export data'), findsNothing);
+    expect(
+      Directionality.of(tester.element(find.text('الإعدادات'))),
+      TextDirection.rtl,
+    );
   });
 
   testWidgets('FAB opens the add expense screen', (tester) async {
@@ -99,7 +123,12 @@ void main() {
         overrides: [
           transactionRepositoryProvider.overrideWithValue(repository),
         ],
-        child: MaterialApp(home: AddExpenseScreen(existing: existing)),
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: AddExpenseScreen(existing: existing),
+        ),
       ),
     );
 

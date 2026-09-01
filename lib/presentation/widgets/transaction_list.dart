@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/widgets/empty_state.dart';
@@ -37,10 +38,15 @@ List<HistorySection> groupTransactions(
   ];
 }
 
-String historySectionLabel(DateTime keyDate, HistoryGrouping grouping) {
+String historySectionLabel(
+  DateTime keyDate,
+  HistoryGrouping grouping, [
+  String? localeName,
+]) {
+  final locale = localeName ?? Intl.getCurrentLocale();
   return switch (grouping) {
-    HistoryGrouping.day => DateFormat.yMMMd().format(keyDate),
-    HistoryGrouping.month => DateFormat.yMMMM().format(keyDate),
+    HistoryGrouping.day => formatDay(keyDate, locale),
+    HistoryGrouping.month => formatMonth(keyDate, locale),
   };
 }
 
@@ -52,7 +58,7 @@ class TransactionList extends StatelessWidget {
     this.onRefresh,
     this.onEdit,
     this.onDelete,
-    this.emptyMessage = 'No expenses yet.',
+    this.emptyMessage,
     this.nested = false,
     this.currencySymbol = kDefaultCurrencySymbol,
     this.markThisMonth = false,
@@ -63,21 +69,21 @@ class TransactionList extends StatelessWidget {
   final Future<void> Function()? onRefresh;
   final void Function(Expense transaction)? onEdit;
   final Future<void> Function(Expense transaction)? onDelete;
-  final String emptyMessage;
+  final String? emptyMessage;
   final bool nested;
   final String currencySymbol;
   final bool markThisMonth;
 
   @override
   Widget build(BuildContext context) {
-    final body = transactions.isEmpty ? _empty() : _sections();
+    final body = transactions.isEmpty ? _empty(context) : _sections(context);
     if (nested) {
       return body;
     }
     return RefreshIndicator(onRefresh: onRefresh ?? () async {}, child: body);
   }
 
-  Widget _empty() {
+  Widget _empty(BuildContext context) {
     return ListView(
       shrinkWrap: nested,
       physics: nested
@@ -85,17 +91,23 @@ class TransactionList extends StatelessWidget {
           : const AlwaysScrollableScrollPhysics(),
       children: [
         const SizedBox(height: 48),
-        EmptyState(message: emptyMessage),
+        EmptyState(
+          message: emptyMessage ?? AppLocalizations.of(context).noExpensesYet,
+        ),
       ],
     );
   }
 
-  Widget _sections() {
+  Widget _sections(BuildContext context) {
     final sections = groupTransactions(transactions, grouping);
     final children = [
       for (final section in sections)
         _HistorySectionView(
-          label: historySectionLabel(section.keyDate, grouping),
+          label: historySectionLabel(
+            section.keyDate,
+            grouping,
+            Localizations.localeOf(context).toString(),
+          ),
           keyDate: section.keyDate,
           transactions: section.transactions,
           onEdit: onEdit,
@@ -150,7 +162,7 @@ class _HistorySectionView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 4),
             child: Row(
               children: [
                 Expanded(
@@ -168,7 +180,7 @@ class _HistorySectionView extends StatelessWidget {
                       'this-month-badge-${keyDate.millisecondsSinceEpoch}',
                     ),
                     visualDensity: VisualDensity.compact,
-                    label: const Text('This month'),
+                    label: Text(AppLocalizations.of(context).thisMonth),
                     padding: EdgeInsets.zero,
                     side: BorderSide.none,
                     backgroundColor: theme.colorScheme.primary.withValues(

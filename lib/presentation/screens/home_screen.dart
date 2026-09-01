@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/monthly_totals.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
+import 'package:expensetracker/presentation/category_l10n.dart';
 import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/monthly_totals_provider.dart';
@@ -21,6 +22,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final month = ref.watch(selectedMonthProvider);
     final filter = ref.watch(categoryFilterProvider);
     final totals = ref.watch(monthlyTotalsProvider);
@@ -29,22 +31,22 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ExpenseTracker'),
+        title: Text(l10n.appTitle),
         actions: [
           IconButton(
-            tooltip: 'History',
+            tooltip: l10n.historyTooltip,
             onPressed: () => HistoryScreen.open(context),
             icon: const Icon(Icons.history),
           ),
           IconButton(
-            tooltip: 'Settings',
+            tooltip: l10n.settingsTooltip,
             onPressed: () => SettingsScreen.open(context),
             icon: const Icon(Icons.settings),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Add expense',
+        tooltip: l10n.addExpenseTooltip,
         onPressed: () => AddExpenseScreen.open(context),
         child: const Icon(Icons.add),
       ),
@@ -61,6 +63,7 @@ class HomeScreen extends ConsumerWidget {
     AsyncValue<List<Expense>> filtered,
     String currencySymbol,
   ) {
+    final l10n = AppLocalizations.of(context);
     if ((totals.isLoading && !totals.hasValue) ||
         (filtered.isLoading && !filtered.hasValue)) {
       return const Center(child: CircularProgressIndicator());
@@ -68,14 +71,14 @@ class HomeScreen extends ConsumerWidget {
 
     if (totals.hasError && !totals.hasValue) {
       return ErrorState(
-        message: 'Could not load totals: ${totals.error}',
+        message: l10n.couldNotLoadTotals(totals.error!),
         onRetry: () => _retry(ref),
       );
     }
 
     if (filtered.hasError && !filtered.hasValue) {
       return ErrorState(
-        message: 'Could not load expenses: ${filtered.error}',
+        message: l10n.couldNotLoadExpenses(filtered.error!),
         onRetry: () => _retry(ref),
       );
     }
@@ -90,13 +93,13 @@ class HomeScreen extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
               child: Column(
                 children: [
                   _MonthSelector(month: month),
                   const SizedBox(height: 16),
                   Text(
-                    'Spent this month',
+                    l10n.spentThisMonth,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   Text(
@@ -117,11 +120,11 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: Text(
                       filter == null
-                          ? 'This month'
-                          : '${filter.label} this month',
+                          ? l10n.thisMonth
+                          : l10n.categoryThisMonth(filter.localizedName(l10n)),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
@@ -136,8 +139,10 @@ class HomeScreen extends ConsumerWidget {
               grouping: HistoryGrouping.day,
               currencySymbol: currencySymbol,
               emptyMessage: filter == null
-                  ? 'No expenses this month.\nTap + to add one.'
-                  : 'No ${filter.label.toLowerCase()} expenses this month.',
+                  ? l10n.noExpensesThisMonth
+                  : l10n.noCategoryExpensesThisMonth(
+                      filter.localizedName(l10n),
+                    ),
               onEdit: (transaction) =>
                   AddExpenseScreen.open(context, existing: transaction),
               onDelete: (transaction) => ref
@@ -164,17 +169,18 @@ class _MonthSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final isCurrent = !calendarMonth(month).isBefore(calendarMonth());
     return Row(
       children: [
         IconButton(
-          tooltip: 'Previous month',
+          tooltip: l10n.previousMonthTooltip,
           onPressed: () => ref.read(selectedMonthProvider.notifier).previous(),
           icon: const Icon(Icons.chevron_left),
         ),
         Expanded(
           child: Text(
-            DateFormat.yMMMM().format(month),
+            formatMonth(month, Localizations.localeOf(context).toString()),
             key: const Key('selected-month'),
             textAlign: TextAlign.center,
             style: Theme.of(
@@ -183,7 +189,7 @@ class _MonthSelector extends ConsumerWidget {
           ),
         ),
         IconButton(
-          tooltip: 'Next month',
+          tooltip: l10n.nextMonthTooltip,
           onPressed: isCurrent
               ? null
               : () => ref.read(selectedMonthProvider.notifier).next(),

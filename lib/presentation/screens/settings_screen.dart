@@ -7,9 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
+import 'package:expensetracker/presentation/providers/locale_provider.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -23,18 +25,54 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final currencySymbol = ref.watch(currencySymbolProvider);
+    final localeCode = ref.watch(localeCodeProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         children: [
-          const ListTile(
-            leading: Icon(Icons.attach_money),
-            title: Text('Currency'),
-            subtitle: Text('Shown on totals, lists, and the expense form'),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(l10n.languageTitle),
+            subtitle: Text(l10n.languageSubtitle),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+            child: Wrap(
+              spacing: 8,
+              children: [
+                ChoiceChip(
+                  key: const Key('language-en'),
+                  label: Text(l10n.languageEnglish),
+                  selected: localeCode == 'en',
+                  onSelected: (selected) {
+                    if (selected) {
+                      setAppLocale(ref, 'en');
+                    }
+                  },
+                ),
+                ChoiceChip(
+                  key: const Key('language-ar'),
+                  label: Text(l10n.languageArabic),
+                  selected: localeCode == 'ar',
+                  onSelected: (selected) {
+                    if (selected) {
+                      setAppLocale(ref, 'ar');
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.attach_money),
+            title: Text(l10n.currencyTitle),
+            subtitle: Text(l10n.currencySubtitle),
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
             child: Wrap(
               spacing: 8,
               children: [
@@ -57,15 +95,15 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             key: const Key('export-data'),
             leading: const Icon(Icons.ios_share),
-            title: const Text('Export data'),
-            subtitle: const Text('Share all expenses as a CSV file'),
+            title: Text(l10n.exportData),
+            subtitle: Text(l10n.exportDataSubtitle),
             onTap: () => _export(context, ref),
           ),
           ListTile(
             key: const Key('import-data'),
             leading: const Icon(Icons.file_open),
-            title: const Text('Import data'),
-            subtitle: const Text('Add expenses from a CSV export'),
+            title: Text(l10n.importData),
+            subtitle: Text(l10n.importDataSubtitle),
             onTap: () => _import(context, ref),
           ),
         ],
@@ -74,6 +112,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _export(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
     try {
       final csv = await ref.read(exportExpensesProvider)();
       final directory = await getTemporaryDirectory();
@@ -82,7 +121,7 @@ class SettingsScreen extends ConsumerWidget {
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],
-          subject: 'ExpenseTracker export',
+          subject: l10n.exportShareSubject,
         ),
       );
     } catch (error) {
@@ -91,11 +130,12 @@ class SettingsScreen extends ConsumerWidget {
       }
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Export failed: $error')));
+      ).showSnackBar(SnackBar(content: Text(l10n.exportFailed(error))));
     }
   }
 
   Future<void> _import(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
     try {
       final picked = await FilePicker.pickFiles(
         type: FileType.custom,
@@ -116,9 +156,7 @@ class SettingsScreen extends ConsumerWidget {
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Imported ${result.inserted}, skipped ${result.skipped} duplicate${result.skipped == 1 ? '' : 's'}.',
-          ),
+          content: Text(l10n.importResult(result.inserted, result.skipped)),
         ),
       );
     } catch (error) {
@@ -127,7 +165,7 @@ class SettingsScreen extends ConsumerWidget {
       }
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Import failed: $error')));
+      ).showSnackBar(SnackBar(content: Text(l10n.importFailed(error))));
     }
   }
 }

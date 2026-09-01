@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
@@ -19,29 +20,30 @@ class HistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final history = ref.watch(transactionsProvider);
     final grouping = ref.watch(historyGroupingProvider);
     final currencySymbol = ref.watch(currencySymbolProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('History')),
+      appBar: AppBar(title: Text(l10n.historyTitle)),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: SegmentedButton<HistoryGrouping>(
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: HistoryGrouping.day,
-                    label: Text('Day'),
-                    icon: Icon(Icons.today),
+                    label: Text(l10n.groupByDay),
+                    icon: const Icon(Icons.today),
                   ),
                   ButtonSegment(
                     value: HistoryGrouping.month,
-                    label: Text('Month'),
-                    icon: Icon(Icons.calendar_month),
+                    label: Text(l10n.groupByMonth),
+                    icon: const Icon(Icons.calendar_month),
                   ),
                 ],
                 selected: {grouping},
@@ -57,7 +59,7 @@ class HistoryScreen extends ConsumerWidget {
               skipLoadingOnReload: true,
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => ErrorState(
-                message: 'Could not load history: $error',
+                message: l10n.couldNotLoadHistory(error),
                 onRetry: () => ref.invalidate(transactionsProvider),
               ),
               data: (items) => TransactionList(
@@ -65,7 +67,7 @@ class HistoryScreen extends ConsumerWidget {
                 grouping: grouping,
                 currencySymbol: currencySymbol,
                 markThisMonth: true,
-                emptyMessage: 'No expenses yet.\nAdd one from the home screen.',
+                emptyMessage: l10n.noExpensesYet,
                 onRefresh: () =>
                     ref.read(transactionsProvider.notifier).refresh(),
                 onEdit: (transaction) =>
@@ -92,16 +94,17 @@ class HistoryScreen extends ConsumerWidget {
     if (!context.mounted) {
       return;
     }
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.showSnackBar(
       SnackBar(
-        content: const Text('Expense deleted'),
+        content: Text(l10n.expenseDeleted),
         duration: const Duration(seconds: 4),
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           key: const Key('undo-delete'),
-          label: 'Undo',
+          label: l10n.undo,
           onPressed: () {
             ref
                 .read(transactionsProvider.notifier)

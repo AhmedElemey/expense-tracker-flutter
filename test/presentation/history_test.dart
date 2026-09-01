@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/main.dart';
+import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/widgets/transaction_list.dart';
@@ -84,11 +84,11 @@ void main() {
 
     expect(find.text('History'), findsOneWidget);
     expect(
-      find.text(DateFormat.yMMMd().format(DateTime(2026, 9, 1))),
+      find.text(formatDay(DateTime(2026, 9, 1), 'en')),
       findsWidgets,
     );
     expect(
-      find.text(DateFormat.yMMMd().format(DateTime(2026, 9, 15))),
+      find.text(formatDay(DateTime(2026, 9, 15), 'en')),
       findsWidgets,
     );
     expect(find.text('Lunch'), findsOneWidget);
@@ -151,11 +151,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text(DateFormat.yMMMM().format(DateTime(2026, 9))),
+      find.text(formatMonth(DateTime(2026, 9), 'en')),
       findsOneWidget,
     );
     expect(
-      find.text(DateFormat.yMMMM().format(DateTime(2026, 10))),
+      find.text(formatMonth(DateTime(2026, 10), 'en')),
       findsOneWidget,
     );
   });
@@ -213,7 +213,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('This month'), findsOneWidget);
     expect(
-      find.text(DateFormat.yMMMM().format(DateTime(now.year, now.month))),
+      find.text(formatMonth(DateTime(now.year, now.month), 'en')),
       findsWidgets,
     );
   });

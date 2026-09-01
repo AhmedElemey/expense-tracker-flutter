@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
+import 'package:expensetracker/presentation/category_l10n.dart';
 import 'package:expensetracker/presentation/category_visuals.dart';
 
 class CategoryChip extends StatelessWidget {
@@ -20,7 +22,7 @@ class CategoryChip extends StatelessWidget {
     final foreground = selected ? Colors.white : category.color;
     return ChoiceChip(
       avatar: Icon(category.icon, size: 18, color: foreground),
-      label: Text(category.label),
+      label: Text(category.localizedName(AppLocalizations.of(context))),
       selected: selected,
       showCheckmark: false,
       onSelected: onSelected,

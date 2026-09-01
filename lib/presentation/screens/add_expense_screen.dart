@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/widgets/expense_form.dart';
 
 class AddExpenseScreen extends StatelessWidget {
@@ -20,9 +21,12 @@ class AddExpenseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isEditing = existing != null;
     return Scaffold(
-      appBar: AppBar(title: Text(isEditing ? 'Edit expense' : 'Add expense')),
+      appBar: AppBar(
+        title: Text(isEditing ? l10n.editExpenseTitle : l10n.addExpenseTitle),
+      ),
       body: ExpenseForm(
         existing: existing,
         onSaved: () => Navigator.of(context).pop(true),

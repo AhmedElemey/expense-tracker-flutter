@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/l10n/app_localizations.dart';
+import 'package:expensetracker/presentation/category_l10n.dart';
 import 'package:expensetracker/presentation/category_visuals.dart';
 import 'package:expensetracker/presentation/format.dart';
 
@@ -24,14 +25,19 @@ class TransactionListItem extends StatelessWidget {
     final category = transaction.category;
     final note = transaction.note?.trim();
     final hasNote = note != null && note.isNotEmpty;
-    final dateLabel = DateFormat.yMMMd().format(transaction.date);
+    final l10n = AppLocalizations.of(context);
+    final categoryName = category.localizedName(l10n);
+    final dateLabel = formatDay(
+      transaction.date,
+      Localizations.localeOf(context).toString(),
+    );
     final tile = ListTile(
       leading: CircleAvatar(
         backgroundColor: category.color.withValues(alpha: 0.18),
         child: Icon(category.icon, color: category.color),
       ),
-      title: Text(hasNote ? note : category.label),
-      subtitle: Text([if (hasNote) category.label, dateLabel].join(' · ')),
+      title: Text(hasNote ? note : categoryName),
+      subtitle: Text([if (hasNote) categoryName, dateLabel].join(' · ')),
       trailing: Text(
         formatAmount(transaction.amount, symbol: currencySymbol),
         style: Theme.of(
@@ -50,7 +56,7 @@ class TransactionListItem extends StatelessWidget {
       key: ValueKey('transaction-$id'),
       direction: DismissDirection.endToStart,
       background: Container(
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerEnd,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         color: Theme.of(context).colorScheme.error,
         child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),

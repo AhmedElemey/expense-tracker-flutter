@@ -1,0 +1,112 @@
+{
+  "@@locale": "en",
+  "appTitle": "ExpenseTracker",
+  "historyTooltip": "History",
+  "settingsTooltip": "Settings",
+  "addExpenseTooltip": "Add expense",
+  "previousMonthTooltip": "Previous month",
+  "nextMonthTooltip": "Next month",
+  "spentThisMonth": "Spent this month",
+  "thisMonth": "This month",
+  "categoryThisMonth": "{category} this month",
+  "@categoryThisMonth": {
+    "placeholders": {
+      "category": {"type": "String"}
+    }
+  },
+  "noExpensesThisMonth": "No expenses this month.\nTap + to add one.",
+  "noCategoryExpensesThisMonth": "No {category} expenses this month.",
+  "@noCategoryExpensesThisMonth": {
+    "placeholders": {
+      "category": {"type": "String"}
+    }
+  },
+  "noSpendingToChart": "No spending to chart this month.",
+  "couldNotLoadTotals": "Could not load totals: {error}",
+  "@couldNotLoadTotals": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "couldNotLoadExpenses": "Could not load expenses: {error}",
+  "@couldNotLoadExpenses": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "couldNotLoadHistory": "Could not load history: {error}",
+  "@couldNotLoadHistory": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "retry": "Retry",
+  "historyTitle": "History",
+  "groupByDay": "Day",
+  "groupByMonth": "Month",
+  "noExpensesYet": "No expenses yet.\nAdd one from the home screen.",
+  "expenseDeleted": "Expense deleted",
+  "undo": "Undo",
+  "settingsTitle": "Settings",
+  "currencyTitle": "Currency",
+  "currencySubtitle": "Shown on totals, lists, and the expense form",
+  "languageTitle": "Language",
+  "languageSubtitle": "English or Arabic — used for the whole app",
+  "languageEnglish": "English",
+  "languageArabic": "العربية",
+  "exportData": "Export data",
+  "exportDataSubtitle": "Share all expenses as a CSV file",
+  "importData": "Import data",
+  "importDataSubtitle": "Add expenses from a CSV export",
+  "exportFailed": "Export failed: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "importFailed": "Import failed: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "importResult": "{skipped, plural, =1{Imported {inserted}, skipped 1 duplicate.} other{Imported {inserted}, skipped {skipped} duplicates.}}",
+  "@importResult": {
+    "placeholders": {
+      "inserted": {"type": "int"},
+      "skipped": {"type": "int"}
+    }
+  },
+  "exportShareSubject": "ExpenseTracker export",
+  "addExpenseTitle": "Add expense",
+  "editExpenseTitle": "Edit expense",
+  "amountLabel": "Amount",
+  "amountHint": "0.00",
+  "dateLabel": "Date",
+  "categoryLabel": "Category",
+  "noteLabel": "Note (optional)",
+  "save": "Save",
+  "saveChanges": "Save changes",
+  "saving": "Saving…",
+  "enterAmount": "Enter an amount",
+  "amountMustBePositive": "Amount must be greater than 0",
+  "couldNotSaveExpense": "Could not save expense: {error}",
+  "@couldNotSaveExpense": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "showAllTotal": "Show all · {amount} total",
+  "@showAllTotal": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "categoryFood": "Food",
+  "categoryTransport": "Transport",
+  "categoryBills": "Bills",
+  "categoryEntertainment": "Entertainment",
+  "categoryShopping": "Shopping",
+  "categoryHealth": "Health",
+  "categoryOther": "Other"
+}
