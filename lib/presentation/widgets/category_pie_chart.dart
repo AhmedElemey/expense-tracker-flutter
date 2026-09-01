@@ -13,11 +13,13 @@ class CategoryPieChart extends StatelessWidget {
     required this.totals,
     required this.selected,
     required this.onCategoryTapped,
+    this.currencySymbol = kDefaultCurrencySymbol,
   });
 
   final Map<ExpenseCategory, double> totals;
   final ExpenseCategory? selected;
   final ValueChanged<ExpenseCategory> onCategoryTapped;
+  final String currencySymbol;
 
   List<MapEntry<ExpenseCategory, double>> get _slices {
     final entries = totals.entries.where((entry) => entry.value > 0).toList()
@@ -93,7 +95,9 @@ class CategoryPieChart extends StatelessWidget {
         if (selected != null)
           TextButton(
             onPressed: () => onCategoryTapped(selected!),
-            child: Text('Show all · ${formatAmount(total)} total'),
+            child: Text(
+              'Show all · ${formatAmount(total, symbol: currencySymbol)} total',
+            ),
           ),
       ],
     );

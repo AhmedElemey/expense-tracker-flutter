@@ -9,11 +9,13 @@ class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
     super.key,
     required this.transaction,
+    this.currencySymbol = kDefaultCurrencySymbol,
     this.onTap,
     this.onDelete,
   });
 
   final Expense transaction;
+  final String currencySymbol;
   final VoidCallback? onTap;
   final Future<void> Function(Expense transaction)? onDelete;
 
@@ -31,7 +33,7 @@ class TransactionListItem extends StatelessWidget {
       title: Text(hasNote ? note : category.label),
       subtitle: Text([if (hasNote) category.label, dateLabel].join(' · ')),
       trailing: Text(
-        formatAmount(transaction.amount),
+        formatAmount(transaction.amount, symbol: currencySymbol),
         style: Theme.of(
           context,
         ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),

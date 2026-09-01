@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/widgets/category_chip.dart';
 
@@ -52,6 +53,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final currencySymbol = ref.watch(currencySymbolProvider);
     return Form(
       key: _formKey,
       autovalidateMode: _autovalidateMode,
@@ -66,10 +68,11 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
             ],
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Amount',
               hintText: '0.00',
-              prefixIcon: Icon(Icons.attach_money),
+              prefixText: currencySymbol,
+              prefixIcon: const Icon(Icons.attach_money),
             ),
             validator: _validateAmount,
           ),

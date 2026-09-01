@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
+import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -21,10 +23,37 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currencySymbol = ref.watch(currencySymbolProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
+          const ListTile(
+            leading: Icon(Icons.attach_money),
+            title: Text('Currency'),
+            subtitle: Text('Shown on totals, lists, and the expense form'),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Wrap(
+              spacing: 8,
+              children: [
+                for (final symbol in kCurrencySymbols)
+                  ChoiceChip(
+                    key: Key('currency-$symbol'),
+                    label: Text(symbol),
+                    selected: currencySymbol == symbol,
+                    onSelected: (selected) {
+                      if (selected) {
+                        ref.read(currencySymbolProvider.notifier).state =
+                            symbol;
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+          const Divider(),
           ListTile(
             key: const Key('export-data'),
             leading: const Icon(Icons.ios_share),

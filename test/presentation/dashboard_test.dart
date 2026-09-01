@@ -81,11 +81,32 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const Key('month-total')), findsOneWidget);
-    expect(find.text('28.00'), findsOneWidget);
+    expect(find.text(r'$28.00'), findsOneWidget);
     expect(find.byKey(const Key('category-pie-chart')), findsOneWidget);
     expect(find.text('Lunch'), findsOneWidget);
     expect(find.text('Taxi'), findsOneWidget);
     expect(find.text('August only'), findsNothing);
+  });
+
+  testWidgets('settings currency symbol prefixes displayed amounts', (
+    tester,
+  ) async {
+    repository.items.add(
+      expense(id: 1, amount: 8, date: DateTime(2026, 9, 1), note: 'Lunch'),
+    );
+
+    await pumpDashboard(tester);
+    expect(find.text(r'$8.00'), findsWidgets);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('currency-€')));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.text('€8.00'), findsWidgets);
+    expect(find.text(r'$8.00'), findsNothing);
   });
 
   testWidgets('tapping a category legend filters the list below', (
@@ -136,7 +157,7 @@ void main() {
     await pumpDashboard(tester, month: DateTime(2026, 8));
 
     expect(find.text('August bill'), findsOneWidget);
-    expect(find.text('15.00'), findsWidgets);
+    expect(find.text(r'$15.00'), findsWidgets);
     expect(find.text('September lunch'), findsNothing);
 
     await tester.tap(find.byTooltip('Next month'));

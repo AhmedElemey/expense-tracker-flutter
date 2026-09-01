@@ -93,8 +93,8 @@ void main() {
     );
     expect(find.text('Lunch'), findsOneWidget);
     expect(find.text('Taxi'), findsOneWidget);
-    expect(find.text('8.00'), findsOneWidget);
-    expect(find.text('20.00'), findsOneWidget);
+    expect(find.text(r'$8.00'), findsOneWidget);
+    expect(find.text(r'$20.00'), findsOneWidget);
 
     await tester.drag(
       find.byKey(const ValueKey('transaction-1')),
@@ -177,8 +177,8 @@ void main() {
     await tester.tap(find.byKey(const Key('expense-save')));
     await tester.pumpAndSettle();
 
-    expect(find.text('40.00'), findsOneWidget);
-    expect(find.text('8.00'), findsNothing);
+    expect(find.text(r'$40.00'), findsOneWidget);
+    expect(find.text(r'$8.00'), findsNothing);
     expect(repository.items.single.amount, 40);
   });
 

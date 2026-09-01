@@ -30,6 +30,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Export data'), findsOneWidget);
     expect(find.text('Import data'), findsOneWidget);
+    expect(find.byKey(const Key(r'currency-$')), findsOneWidget);
   });
 
   testWidgets('FAB opens the add expense screen', (tester) async {

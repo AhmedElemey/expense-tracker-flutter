@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/widgets/empty_state.dart';
 import 'package:expensetracker/presentation/widgets/transaction_list_item.dart';
@@ -53,6 +54,7 @@ class TransactionList extends StatelessWidget {
     this.onDelete,
     this.emptyMessage = 'No expenses yet.',
     this.nested = false,
+    this.currencySymbol = kDefaultCurrencySymbol,
   });
 
   final List<Expense> transactions;
@@ -62,6 +64,7 @@ class TransactionList extends StatelessWidget {
   final Future<void> Function(Expense transaction)? onDelete;
   final String emptyMessage;
   final bool nested;
+  final String currencySymbol;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +97,7 @@ class TransactionList extends StatelessWidget {
           transactions: section.transactions,
           onEdit: onEdit,
           onDelete: onDelete,
+          currencySymbol: currencySymbol,
         ),
     ];
 
@@ -117,12 +121,14 @@ class _HistorySectionView extends StatelessWidget {
     required this.transactions,
     this.onEdit,
     this.onDelete,
+    required this.currencySymbol,
   });
 
   final String label;
   final List<Expense> transactions;
   final void Function(Expense transaction)? onEdit;
   final Future<void> Function(Expense transaction)? onDelete;
+  final String currencySymbol;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +149,7 @@ class _HistorySectionView extends StatelessWidget {
         for (final transaction in transactions)
           TransactionListItem(
             transaction: transaction,
+            currencySymbol: currencySymbol,
             onTap: onEdit == null ? null : () => onEdit!(transaction),
             onDelete: onDelete,
           ),

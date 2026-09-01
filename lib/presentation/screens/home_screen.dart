@@ -25,6 +25,7 @@ class HomeScreen extends ConsumerWidget {
     final filter = ref.watch(categoryFilterProvider);
     final totals = ref.watch(monthlyTotalsProvider);
     final filtered = ref.watch(filteredTransactionsProvider);
+    final currencySymbol = ref.watch(currencySymbolProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +48,7 @@ class HomeScreen extends ConsumerWidget {
         onPressed: () => AddExpenseScreen.open(context),
         child: const Icon(Icons.add),
       ),
-      body: _body(context, ref, month, filter, totals, filtered),
+      body: _body(context, ref, month, filter, totals, filtered, currencySymbol),
     );
   }
 
@@ -58,6 +59,7 @@ class HomeScreen extends ConsumerWidget {
     ExpenseCategory? filter,
     AsyncValue<MonthlyTotals> totals,
     AsyncValue<List<Expense>> filtered,
+    String currencySymbol,
   ) {
     if ((totals.isLoading && !totals.hasValue) ||
         (filtered.isLoading && !filtered.hasValue)) {
@@ -98,7 +100,7 @@ class HomeScreen extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   Text(
-                    formatAmount(monthly.total),
+                    formatAmount(monthly.total, symbol: currencySymbol),
                     key: const Key('month-total'),
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -108,6 +110,7 @@ class HomeScreen extends ConsumerWidget {
                   CategoryPieChart(
                     totals: monthly.byCategory,
                     selected: filter,
+                    currencySymbol: currencySymbol,
                     onCategoryTapped: (category) => ref
                         .read(categoryFilterProvider.notifier)
                         .toggle(category),
@@ -131,6 +134,7 @@ class HomeScreen extends ConsumerWidget {
               nested: true,
               transactions: items,
               grouping: HistoryGrouping.day,
+              currencySymbol: currencySymbol,
               emptyMessage: filter == null
                   ? 'No expenses this month.\nTap + to add one.'
                   : 'No ${filter.label.toLowerCase()} expenses this month.',

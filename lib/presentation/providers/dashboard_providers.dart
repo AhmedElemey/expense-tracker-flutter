@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
+import 'package:expensetracker/presentation/format.dart';
 
 /// How the history list is sectioned.
 enum HistoryGrouping { day, month }
@@ -47,4 +48,8 @@ class SelectedMonthNotifier extends Notifier<DateTime> {
 
 final selectedMonthProvider = NotifierProvider<SelectedMonthNotifier, DateTime>(
   SelectedMonthNotifier.new,
+);
+
+final currencySymbolProvider = StateProvider<String>(
+  (ref) => kDefaultCurrencySymbol,
 );

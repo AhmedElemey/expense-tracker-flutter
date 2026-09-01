@@ -21,6 +21,7 @@ class HistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final history = ref.watch(transactionsProvider);
     final grouping = ref.watch(historyGroupingProvider);
+    final currencySymbol = ref.watch(currencySymbolProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('History')),
@@ -62,6 +63,7 @@ class HistoryScreen extends ConsumerWidget {
               data: (items) => TransactionList(
                 transactions: items,
                 grouping: grouping,
+                currencySymbol: currencySymbol,
                 emptyMessage: 'No expenses yet.\nAdd one from the home screen.',
                 onRefresh: () =>
                     ref.read(transactionsProvider.notifier).refresh(),
