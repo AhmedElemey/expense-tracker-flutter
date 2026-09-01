@@ -91,11 +91,15 @@ GROUP BY ${TransactionColumns.category}
 ''',
       [bounds.start, bounds.end],
     );
-    return {
-      for (final row in rows)
-        ExpenseCategory.fromStorage(row[TransactionColumns.category] as String):
-            (row['total'] as num).toDouble(),
-    };
+    final totals = <ExpenseCategory, double>{};
+    for (final row in rows) {
+      final category = ExpenseCategory.fromStorage(
+        row[TransactionColumns.category] as String,
+      );
+      final amount = (row['total'] as num).toDouble();
+      totals[category] = (totals[category] ?? 0) + amount;
+    }
+    return totals;
   }
 
   ({String start, String end}) _monthBounds(DateTime month) {

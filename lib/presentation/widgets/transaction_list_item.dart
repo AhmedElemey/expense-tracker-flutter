@@ -26,7 +26,10 @@ class TransactionListItem extends StatelessWidget {
     final note = transaction.note?.trim();
     final hasNote = note != null && note.isNotEmpty;
     final l10n = AppLocalizations.of(context);
-    final categoryName = category.localizedName(l10n);
+    final categoryName = category.displayName(
+      l10n,
+      customCategory: transaction.customCategory,
+    );
     final dateLabel = formatDay(
       transaction.date,
       Localizations.localeOf(context).toString(),

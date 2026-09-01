@@ -30,6 +30,7 @@ void main() {
     ExpenseCategory category = ExpenseCategory.food,
     DateTime? date,
     String? note = 'Lunch',
+    String? customCategory,
   }) {
     return Expense(
       id: id,
@@ -37,6 +38,7 @@ void main() {
       category: category,
       date: date ?? DateTime(2026, 9, 1, 12),
       note: note,
+      customCategory: customCategory,
     );
   }
 
@@ -158,5 +160,50 @@ void main() {
 
   test('getCategoryTotals is empty when the month has no rows', () async {
     expect(await repository.getCategoryTotals(DateTime(2026, 1)), isEmpty);
+  });
+
+  test('custom Other category round-trips through SQLite', () async {
+    final id = await repository.insertTransaction(
+      record(
+        category: ExpenseCategory.other,
+        customCategory: 'Gym',
+        note: null,
+      ),
+    );
+
+    final all = await repository.getAllTransactions();
+    expect(all.single.id, id);
+    expect(all.single.category, ExpenseCategory.other);
+    expect(all.single.customCategory, 'Gym');
+  });
+
+  test('getCategoryTotals merges custom Other labels into other', () async {
+    await repository.insertTransaction(
+      record(
+        amount: 10,
+        category: ExpenseCategory.other,
+        customCategory: 'Gym',
+      ),
+    );
+    await repository.insertTransaction(
+      record(
+        amount: 7,
+        category: ExpenseCategory.other,
+        customCategory: 'Pets',
+        date: DateTime(2026, 9, 2),
+      ),
+    );
+    await repository.insertTransaction(
+      record(
+        amount: 3,
+        category: ExpenseCategory.food,
+        date: DateTime(2026, 9, 3),
+      ),
+    );
+
+    expect(await repository.getCategoryTotals(DateTime(2026, 9)), {
+      ExpenseCategory.other: 17,
+      ExpenseCategory.food: 3,
+    });
   });
 }

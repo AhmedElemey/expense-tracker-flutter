@@ -40,7 +40,7 @@ class ImportExpenses {
     return [
       expense.date.toIso8601String(),
       expense.amount.toString(),
-      expense.category.name,
+      expense.categoryStorage,
       expense.note ?? '',
     ].join('|');
   }

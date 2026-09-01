@@ -22,6 +22,7 @@ mixin _$Expense {
   ExpenseCategory get category => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String? get note => throw _privateConstructorUsedError;
+  String? get customCategory => throw _privateConstructorUsedError;
 
   /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
@@ -40,6 +41,7 @@ abstract class $ExpenseCopyWith<$Res> {
     ExpenseCategory category,
     DateTime date,
     String? note,
+    String? customCategory,
   });
 }
 
@@ -63,6 +65,7 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
     Object? category = null,
     Object? date = null,
     Object? note = freezed,
+    Object? customCategory = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -86,6 +89,10 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
                 ? _value.note
                 : note // ignore: cast_nullable_to_non_nullable
                       as String?,
+            customCategory: freezed == customCategory
+                ? _value.customCategory
+                : customCategory // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -106,6 +113,7 @@ abstract class _$$ExpenseImplCopyWith<$Res> implements $ExpenseCopyWith<$Res> {
     ExpenseCategory category,
     DateTime date,
     String? note,
+    String? customCategory,
   });
 }
 
@@ -128,6 +136,7 @@ class __$$ExpenseImplCopyWithImpl<$Res>
     Object? category = null,
     Object? date = null,
     Object? note = freezed,
+    Object? customCategory = freezed,
   }) {
     return _then(
       _$ExpenseImpl(
@@ -151,6 +160,10 @@ class __$$ExpenseImplCopyWithImpl<$Res>
             ? _value.note
             : note // ignore: cast_nullable_to_non_nullable
                   as String?,
+        customCategory: freezed == customCategory
+            ? _value.customCategory
+            : customCategory // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -158,14 +171,15 @@ class __$$ExpenseImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ExpenseImpl implements _Expense {
+class _$ExpenseImpl extends _Expense {
   const _$ExpenseImpl({
     this.id,
     required this.amount,
     required this.category,
     required this.date,
     this.note,
-  });
+    this.customCategory,
+  }) : super._();
 
   @override
   final int? id;
@@ -177,10 +191,12 @@ class _$ExpenseImpl implements _Expense {
   final DateTime date;
   @override
   final String? note;
+  @override
+  final String? customCategory;
 
   @override
   String toString() {
-    return 'Expense(id: $id, amount: $amount, category: $category, date: $date, note: $note)';
+    return 'Expense(id: $id, amount: $amount, category: $category, date: $date, note: $note, customCategory: $customCategory)';
   }
 
   @override
@@ -193,12 +209,21 @@ class _$ExpenseImpl implements _Expense {
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.note, note) || other.note == note));
+            (identical(other.note, note) || other.note == note) &&
+            (identical(other.customCategory, customCategory) ||
+                other.customCategory == customCategory));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, amount, category, date, note);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    amount,
+    category,
+    date,
+    note,
+    customCategory,
+  );
 
   /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
@@ -209,14 +234,16 @@ class _$ExpenseImpl implements _Expense {
       __$$ExpenseImplCopyWithImpl<_$ExpenseImpl>(this, _$identity);
 }
 
-abstract class _Expense implements Expense {
+abstract class _Expense extends Expense {
   const factory _Expense({
     final int? id,
     required final double amount,
     required final ExpenseCategory category,
     required final DateTime date,
     final String? note,
+    final String? customCategory,
   }) = _$ExpenseImpl;
+  const _Expense._() : super._();
 
   @override
   int? get id;
@@ -228,6 +255,8 @@ abstract class _Expense implements Expense {
   DateTime get date;
   @override
   String? get note;
+  @override
+  String? get customCategory;
 
   /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.

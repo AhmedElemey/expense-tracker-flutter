@@ -13,4 +13,12 @@ extension ExpenseCategoryL10n on ExpenseCategory {
       ExpenseCategory.other => l10n.categoryOther,
     };
   }
+
+  String displayName(AppLocalizations l10n, {String? customCategory}) {
+    final custom = customCategory?.trim();
+    if (this == ExpenseCategory.other && custom != null && custom.isNotEmpty) {
+      return custom;
+    }
+    return localizedName(l10n);
+  }
 }

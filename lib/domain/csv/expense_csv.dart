@@ -11,7 +11,7 @@ class ExpenseCsv {
         [
           expense.id?.toString() ?? '',
           expense.amount.toString(),
-          expense.category.name,
+          expense.categoryStorage,
           expense.date.toIso8601String(),
           expense.note ?? '',
         ].map(_escape).join(','),
@@ -47,12 +47,14 @@ class ExpenseCsv {
     if (amount == null) {
       throw FormatException('Invalid amount: ${fields[1]}');
     }
+    final stored = ExpenseCategory.parseStored(fields[2]);
     return Expense(
       id: id,
       amount: amount,
-      category: ExpenseCategory.fromStorage(fields[2]),
+      category: stored.category,
       date: DateTime.parse(fields[3]),
       note: fields[4].isEmpty ? null : fields[4],
+      customCategory: stored.customCategory,
     );
   }
 

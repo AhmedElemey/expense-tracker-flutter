@@ -24,6 +24,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
+  final _customCategoryController = TextEditingController();
 
   late DateTime _date;
   late ExpenseCategory _category;
@@ -40,6 +41,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
         ? ''
         : _formatAmount(existing.amount);
     _noteController.text = existing?.note ?? '';
+    _customCategoryController.text = existing?.customCategory ?? '';
     _date = existing?.date ?? DateTime.now();
     _category = existing?.category ?? ExpenseCategory.food;
   }
@@ -48,6 +50,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
+    _customCategoryController.dispose();
     super.dispose();
   }
 
@@ -101,10 +104,30 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
                   key: Key('category-${category.name}'),
                   category: category,
                   selected: _category == category,
-                  onSelected: (_) => setState(() => _category = category),
+                  onSelected: (_) => setState(() {
+                    _category = category;
+                    if (category != ExpenseCategory.other) {
+                      _customCategoryController.clear();
+                    }
+                  }),
                 ),
             ],
           ),
+          if (_category == ExpenseCategory.other) ...[
+            const SizedBox(height: 12),
+            TextFormField(
+              key: const Key('expense-custom-category'),
+              controller: _customCategoryController,
+              textCapitalization: TextCapitalization.sentences,
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                labelText: l10n.customCategoryLabel,
+                hintText: l10n.customCategoryHint,
+                prefixIcon: const Icon(Icons.edit_outlined),
+              ),
+              validator: _validateCustomCategory,
+            ),
+          ],
           const SizedBox(height: 16),
           TextFormField(
             key: const Key('expense-note'),
@@ -143,6 +166,16 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
     return null;
   }
 
+  String? _validateCustomCategory(String? value) {
+    if (_category != ExpenseCategory.other) {
+      return null;
+    }
+    if (value == null || value.trim().isEmpty) {
+      return AppLocalizations.of(context).enterCustomCategory;
+    }
+    return null;
+  }
+
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
@@ -171,12 +204,16 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
     }
 
     final note = _noteController.text.trim();
+    final custom = _category == ExpenseCategory.other
+        ? _customCategoryController.text.trim()
+        : '';
     final expense = Expense(
       id: widget.existing?.id,
       amount: _parseAmount(_amountController.text)!,
       category: _category,
       date: _date,
       note: note.isEmpty ? null : note,
+      customCategory: custom.isEmpty ? null : custom,
     );
 
     setState(() => _saving = true);
@@ -195,7 +232,9 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
       setState(() => _saving = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).couldNotSaveExpense(error)),
+          content: Text(
+            AppLocalizations.of(context).couldNotSaveExpense(error),
+          ),
         ),
       );
     }

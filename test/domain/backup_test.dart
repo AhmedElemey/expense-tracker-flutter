@@ -27,6 +27,19 @@ void main() {
     expect(decoded.single.category, ExpenseCategory.food);
   });
 
+  test('CSV round-trips a custom Other category', () {
+    final gym = Expense(
+      id: 2,
+      amount: 30,
+      category: ExpenseCategory.other,
+      date: DateTime(2026, 9, 3),
+      customCategory: 'Gym',
+    );
+    final decoded = ExpenseCsv.decode(ExpenseCsv.encode([gym]));
+    expect(decoded.single.category, ExpenseCategory.other);
+    expect(decoded.single.customCategory, 'Gym');
+  });
+
   test('ExportExpenses writes every stored expense', () async {
     final repository = FakeTransactionRepository();
     await repository.insertTransaction(lunch());
@@ -57,4 +70,30 @@ void main() {
       containsAll(['Lunch, extra', 'Rent']),
     );
   });
+
+  test(
+    'ImportExpenses treats different custom categories as distinct',
+    () async {
+      final repository = FakeTransactionRepository();
+      final gym = Expense(
+        amount: 30,
+        category: ExpenseCategory.other,
+        date: DateTime(2026, 9, 3),
+        customCategory: 'Gym',
+      );
+      await repository.insertTransaction(gym);
+      final csv = ExpenseCsv.encode([
+        gym.copyWith(id: 1),
+        gym.copyWith(customCategory: 'Pets'),
+      ]);
+
+      final result = await ImportExpenses(repository)(csv);
+      expect(result.inserted, 1);
+      expect(result.skipped, 1);
+      expect(
+        repository.items.map((e) => e.customCategory),
+        containsAll(['Gym', 'Pets']),
+      );
+    },
+  );
 }

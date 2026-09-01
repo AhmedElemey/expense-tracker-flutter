@@ -17,19 +17,41 @@ class ExpenseRecord with _$ExpenseRecord {
     @ExpenseCategoryConverter() required ExpenseCategory category,
     required DateTime date,
     String? note,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    String? customCategory,
   }) = _ExpenseRecord;
 
   factory ExpenseRecord.fromJson(Map<String, dynamic> json) =>
       _$ExpenseRecordFromJson(json);
 
   factory ExpenseRecord.fromMap(Map<String, Object?> map) {
-    return ExpenseRecord.fromJson(Map<String, dynamic>.from(map));
+    final stored = ExpenseCategory.parseStored(
+      map[TransactionColumns.category] as String? ?? ExpenseCategory.other.name,
+    );
+    return ExpenseRecord(
+      id: map[TransactionColumns.id] as int?,
+      amount: (map[TransactionColumns.amount] as num).toDouble(),
+      category: stored.category,
+      date: DateTime.parse(map[TransactionColumns.date] as String),
+      note: map[TransactionColumns.note] as String?,
+      customCategory: stored.customCategory,
+    );
+  }
+
+  String get storageCategory {
+    final custom = customCategory?.trim();
+    if (category == ExpenseCategory.other &&
+        custom != null &&
+        custom.isNotEmpty) {
+      return custom;
+    }
+    return category.name;
   }
 
   Map<String, Object?> toMap() => {
     if (id != null) TransactionColumns.id: id,
     TransactionColumns.amount: amount,
-    TransactionColumns.category: category.name,
+    TransactionColumns.category: storageCategory,
     TransactionColumns.date: date.toIso8601String(),
     TransactionColumns.note: note,
   };

@@ -24,4 +24,23 @@ enum ExpenseCategory {
       orElse: () => ExpenseCategory.other,
     );
   }
+
+  static bool isKnownName(String value) {
+    return ExpenseCategory.values.any((c) => c.name == value);
+  }
+
+  /// Reads the SQLite/CSV category string. Known enum names stay presets;
+  /// anything else is [ExpenseCategory.other] with a custom label.
+  static ({ExpenseCategory category, String? customCategory}) parseStored(
+    String value,
+  ) {
+    if (isKnownName(value)) {
+      return (category: fromStorage(value), customCategory: null);
+    }
+    final trimmed = value.trim();
+    return (
+      category: ExpenseCategory.other,
+      customCategory: trimmed.isEmpty ? null : trimmed,
+    );
+  }
 }

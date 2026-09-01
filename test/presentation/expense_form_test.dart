@@ -24,6 +24,7 @@ void main() {
 
   setUp(() {
     repository = FakeTransactionRepository();
+    SharedPreferences.setMockInitialValues({});
   });
 
   testWidgets('settings shows export and import actions', (tester) async {
@@ -32,7 +33,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Export data'), findsOneWidget);
     expect(find.text('Import data'), findsOneWidget);
+    expect(find.byKey(const Key('currency-E£')), findsOneWidget);
+    expect(find.text('Egyptian Pound E£'), findsOneWidget);
     expect(find.byKey(const Key(r'currency-$')), findsOneWidget);
+    expect(find.text('Dollar \$'), findsOneWidget);
+    expect(find.text('Euro €'), findsOneWidget);
+    expect(find.text('Sterling £'), findsOneWidget);
+    expect(find.text('Yen ¥'), findsOneWidget);
     expect(find.byKey(const Key('language-en')), findsOneWidget);
     expect(find.byKey(const Key('language-ar')), findsOneWidget);
   });
@@ -40,7 +47,6 @@ void main() {
   testWidgets('switching to Arabic localizes settings and uses RTL', (
     tester,
   ) async {
-    SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(app());
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
@@ -144,5 +150,72 @@ void main() {
     expect(repository.items.single.amount, 40);
     expect(repository.items.single.category, ExpenseCategory.bills);
     expect(repository.items.single.note, 'Lunch');
+  });
+
+  testWidgets('Other shows a custom category field and saves the typed name', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await tester.tap(find.byTooltip('Add expense'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('expense-custom-category')), findsNothing);
+
+    await tester.enterText(find.byKey(const Key('expense-amount')), '30');
+    await tester.tap(find.byKey(const Key('category-other')));
+    await tester.pump();
+
+    expect(find.byKey(const Key('expense-custom-category')), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const Key('expense-custom-category')),
+      'Gym',
+    );
+    await tester.tap(find.byKey(const Key('expense-save')));
+    await tester.pumpAndSettle();
+
+    expect(repository.items, hasLength(1));
+    final saved = repository.items.single;
+    expect(saved.category, ExpenseCategory.other);
+    expect(saved.customCategory, 'Gym');
+    expect(find.text('Gym'), findsOneWidget);
+  });
+
+  testWidgets('edit screen prefills a custom Other category', (tester) async {
+    final existing = Expense(
+      id: 1,
+      amount: 30,
+      category: ExpenseCategory.other,
+      date: DateTime(2026, 9, 1, 12),
+      customCategory: 'Gym',
+    );
+    repository.items.add(existing);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          transactionRepositoryProvider.overrideWithValue(repository),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: AddExpenseScreen(existing: existing),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const Key('expense-custom-category')), findsOneWidget);
+    expect(find.text('Gym'), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const Key('expense-custom-category')),
+      'Pets',
+    );
+    await tester.tap(find.byKey(const Key('expense-save')));
+    await tester.pumpAndSettle();
+
+    expect(repository.items.single.category, ExpenseCategory.other);
+    expect(repository.items.single.customCategory, 'Pets');
   });
 }

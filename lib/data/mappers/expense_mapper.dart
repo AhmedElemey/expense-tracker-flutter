@@ -9,6 +9,7 @@ extension ExpenseRecordMapper on ExpenseRecord {
     category: category,
     date: date,
     note: note,
+    customCategory: customCategory,
   );
 }
 
@@ -19,5 +20,6 @@ extension ExpenseMapper on Expense {
     category: category,
     date: date,
     note: note,
+    customCategory: customCategory,
   );
 }

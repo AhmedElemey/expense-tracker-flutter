@@ -27,6 +27,8 @@ mixin _$ExpenseRecord {
   ExpenseCategory get category => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String? get note => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get customCategory => throw _privateConstructorUsedError;
 
   /// Serializes this ExpenseRecord to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,6 +53,8 @@ abstract class $ExpenseRecordCopyWith<$Res> {
     @ExpenseCategoryConverter() ExpenseCategory category,
     DateTime date,
     String? note,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    String? customCategory,
   });
 }
 
@@ -74,6 +78,7 @@ class _$ExpenseRecordCopyWithImpl<$Res, $Val extends ExpenseRecord>
     Object? category = null,
     Object? date = null,
     Object? note = freezed,
+    Object? customCategory = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -97,6 +102,10 @@ class _$ExpenseRecordCopyWithImpl<$Res, $Val extends ExpenseRecord>
                 ? _value.note
                 : note // ignore: cast_nullable_to_non_nullable
                       as String?,
+            customCategory: freezed == customCategory
+                ? _value.customCategory
+                : customCategory // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -118,6 +127,8 @@ abstract class _$$ExpenseRecordImplCopyWith<$Res>
     @ExpenseCategoryConverter() ExpenseCategory category,
     DateTime date,
     String? note,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    String? customCategory,
   });
 }
 
@@ -140,6 +151,7 @@ class __$$ExpenseRecordImplCopyWithImpl<$Res>
     Object? category = null,
     Object? date = null,
     Object? note = freezed,
+    Object? customCategory = freezed,
   }) {
     return _then(
       _$ExpenseRecordImpl(
@@ -163,6 +175,10 @@ class __$$ExpenseRecordImplCopyWithImpl<$Res>
             ? _value.note
             : note // ignore: cast_nullable_to_non_nullable
                   as String?,
+        customCategory: freezed == customCategory
+            ? _value.customCategory
+            : customCategory // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -177,6 +193,7 @@ class _$ExpenseRecordImpl extends _ExpenseRecord {
     @ExpenseCategoryConverter() required this.category,
     required this.date,
     this.note,
+    @JsonKey(includeFromJson: false, includeToJson: false) this.customCategory,
   }) : super._();
 
   factory _$ExpenseRecordImpl.fromJson(Map<String, dynamic> json) =>
@@ -193,10 +210,13 @@ class _$ExpenseRecordImpl extends _ExpenseRecord {
   final DateTime date;
   @override
   final String? note;
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final String? customCategory;
 
   @override
   String toString() {
-    return 'ExpenseRecord(id: $id, amount: $amount, category: $category, date: $date, note: $note)';
+    return 'ExpenseRecord(id: $id, amount: $amount, category: $category, date: $date, note: $note, customCategory: $customCategory)';
   }
 
   @override
@@ -209,13 +229,22 @@ class _$ExpenseRecordImpl extends _ExpenseRecord {
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.note, note) || other.note == note));
+            (identical(other.note, note) || other.note == note) &&
+            (identical(other.customCategory, customCategory) ||
+                other.customCategory == customCategory));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, amount, category, date, note);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    amount,
+    category,
+    date,
+    note,
+    customCategory,
+  );
 
   /// Create a copy of ExpenseRecord
   /// with the given fields replaced by the non-null parameter values.
@@ -238,6 +267,8 @@ abstract class _ExpenseRecord extends ExpenseRecord {
     @ExpenseCategoryConverter() required final ExpenseCategory category,
     required final DateTime date,
     final String? note,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    final String? customCategory,
   }) = _$ExpenseRecordImpl;
   const _ExpenseRecord._() : super._();
 
@@ -255,6 +286,9 @@ abstract class _ExpenseRecord extends ExpenseRecord {
   DateTime get date;
   @override
   String? get note;
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get customCategory;
 
   /// Create a copy of ExpenseRecord
   /// with the given fields replaced by the non-null parameter values.
