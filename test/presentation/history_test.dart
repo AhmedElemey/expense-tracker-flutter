@@ -100,11 +100,41 @@ void main() {
       find.byKey(const ValueKey('transaction-1')),
       const Offset(-500, 0),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(repository.items.map((e) => e.id), [2]);
     expect(find.text('Lunch'), findsNothing);
     expect(find.text('Taxi'), findsOneWidget);
+    expect(find.text('Expense deleted'), findsOneWidget);
+    expect(find.text('Undo'), findsOneWidget);
+  });
+
+  testWidgets('undo restores a swipe-deleted expense', (tester) async {
+    repository.items.add(
+      expense(id: 1, amount: 8, date: DateTime(2026, 9, 1, 12), note: 'Lunch'),
+    );
+
+    await tester.pumpWidget(app());
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+
+    await tester.drag(
+      find.byKey(const ValueKey('transaction-1')),
+      const Offset(-500, 0),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('Expense deleted'), findsOneWidget);
+    tester.widget<SnackBarAction>(find.byKey(const Key('undo-delete'))).onPressed();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('Lunch'), findsOneWidget);
+    expect(repository.items, hasLength(1));
+    expect(repository.items.single.note, 'Lunch');
+    expect(repository.items.single.amount, 8);
   });
 
   testWidgets('month grouping uses month headers', (tester) async {

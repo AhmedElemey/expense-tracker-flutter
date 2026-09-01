@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
@@ -66,13 +67,44 @@ class HistoryScreen extends ConsumerWidget {
                     ref.read(transactionsProvider.notifier).refresh(),
                 onEdit: (transaction) =>
                     AddExpenseScreen.open(context, existing: transaction),
-                onDelete: (transaction) => ref
-                    .read(transactionsProvider.notifier)
-                    .delete(transaction.id!),
+                onDelete: (expense) => _deleteWithUndo(context, ref, expense),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _deleteWithUndo(
+    BuildContext context,
+    WidgetRef ref,
+    Expense expense,
+  ) async {
+    final id = expense.id;
+    if (id == null) {
+      return;
+    }
+    await ref.read(transactionsProvider.notifier).delete(id);
+    if (!context.mounted) {
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      SnackBar(
+        content: const Text('Expense deleted'),
+        duration: const Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          key: const Key('undo-delete'),
+          label: 'Undo',
+          onPressed: () {
+            ref
+                .read(transactionsProvider.notifier)
+                .add(expense.copyWith(id: null));
+          },
+        ),
       ),
     );
   }
