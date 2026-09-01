@@ -1,4 +1,4 @@
-import '../entities/transaction.dart';
+import '../entities/expense.dart';
 import '../expense_validation.dart';
 import '../repositories/transaction_repository.dart';
 
@@ -7,7 +7,7 @@ class UpdateExpense {
 
   final TransactionRepository _repository;
 
-  Future<Transaction> call(Transaction expense) async {
+  Future<Expense> call(Expense expense) async {
     if (expense.id == null) {
       throw ArgumentError('update requires a persisted id');
     }

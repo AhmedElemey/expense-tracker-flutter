@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/domain/usecases/add_expense.dart';
 import 'package:expensetracker/domain/usecases/delete_expense.dart';
 import 'package:expensetracker/domain/usecases/get_history.dart';
@@ -27,14 +27,14 @@ void main() {
     getMonthlyTotals = GetMonthlyTotals(repository);
   });
 
-  Transaction expense({
+  Expense expense({
     int? id,
     double amount = 12.5,
     ExpenseCategory category = ExpenseCategory.food,
     DateTime? date,
     String? note = 'Lunch',
   }) {
-    return Transaction(
+    return Expense(
       id: id,
       amount: amount,
       category: category,

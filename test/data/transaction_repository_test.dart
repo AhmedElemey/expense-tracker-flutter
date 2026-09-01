@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' hide Transaction;
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:expensetracker/data/database/expense_database.dart';
 import 'package:expensetracker/data/repositories/sqlite_transaction_repository.dart';
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 
 void main() {
   late ExpenseDatabase database;
@@ -24,14 +24,14 @@ void main() {
     await database.close();
   });
 
-  Transaction record({
+  Expense record({
     int? id,
     double amount = 12.5,
     ExpenseCategory category = ExpenseCategory.food,
     DateTime? date,
     String? note = 'Lunch',
   }) {
-    return Transaction(
+    return Expense(
       id: id,
       amount: amount,
       category: category,

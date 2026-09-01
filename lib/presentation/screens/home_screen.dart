@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/monthly_totals.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/monthly_totals_provider.dart';
@@ -51,7 +51,7 @@ class HomeScreen extends ConsumerWidget {
     DateTime month,
     ExpenseCategory? filter,
     AsyncValue<MonthlyTotals> totals,
-    AsyncValue<List<Transaction>> filtered,
+    AsyncValue<List<Expense>> filtered,
   ) {
     if ((totals.isLoading && !totals.hasValue) ||
         (filtered.isLoading && !filtered.hasValue)) {

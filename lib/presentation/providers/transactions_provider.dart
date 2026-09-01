@@ -1,23 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 
 import 'app_providers.dart';
 import 'dashboard_providers.dart';
 import 'monthly_totals_provider.dart';
 
-class TransactionsNotifier extends AsyncNotifier<List<Transaction>> {
+class TransactionsNotifier extends AsyncNotifier<List<Expense>> {
   @override
-  Future<List<Transaction>> build() {
+  Future<List<Expense>> build() {
     return ref.watch(getHistoryProvider)();
   }
 
-  Future<void> add(Transaction expense) async {
+  Future<void> add(Expense expense) async {
     await ref.read(addExpenseProvider)(expense);
     await _reload();
   }
 
-  Future<void> edit(Transaction expense) async {
+  Future<void> edit(Expense expense) async {
     await ref.read(updateExpenseProvider)(expense);
     await _reload();
   }
@@ -37,14 +37,12 @@ class TransactionsNotifier extends AsyncNotifier<List<Transaction>> {
 }
 
 final transactionsProvider =
-    AsyncNotifierProvider<TransactionsNotifier, List<Transaction>>(
+    AsyncNotifierProvider<TransactionsNotifier, List<Expense>>(
       TransactionsNotifier.new,
     );
 
 /// Dashboard list: selected month, optionally one category (pie-slice filter).
-final filteredTransactionsProvider = Provider<AsyncValue<List<Transaction>>>((
-  ref,
-) {
+final filteredTransactionsProvider = Provider<AsyncValue<List<Expense>>>((ref) {
   final month = ref.watch(selectedMonthProvider);
   final category = ref.watch(categoryFilterProvider);
   return ref.watch(transactionsProvider).whenData((items) {

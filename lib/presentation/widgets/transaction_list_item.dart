@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/format.dart';
 
 class TransactionListItem extends StatelessWidget {
@@ -12,9 +12,9 @@ class TransactionListItem extends StatelessWidget {
     this.onDelete,
   });
 
-  final Transaction transaction;
+  final Expense transaction;
   final VoidCallback? onTap;
-  final Future<void> Function(Transaction transaction)? onDelete;
+  final Future<void> Function(Expense transaction)? onDelete;
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'transaction_record.dart';
+part of 'expense.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,56 +15,45 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-TransactionRecord _$TransactionRecordFromJson(Map<String, dynamic> json) {
-  return _TransactionRecord.fromJson(json);
-}
-
 /// @nodoc
-mixin _$TransactionRecord {
+mixin _$Expense {
   int? get id => throw _privateConstructorUsedError;
   double get amount => throw _privateConstructorUsedError;
-  @ExpenseCategoryConverter()
   ExpenseCategory get category => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String? get note => throw _privateConstructorUsedError;
 
-  /// Serializes this TransactionRecord to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of TransactionRecord
+  /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TransactionRecordCopyWith<TransactionRecord> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ExpenseCopyWith<Expense> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TransactionRecordCopyWith<$Res> {
-  factory $TransactionRecordCopyWith(
-    TransactionRecord value,
-    $Res Function(TransactionRecord) then,
-  ) = _$TransactionRecordCopyWithImpl<$Res, TransactionRecord>;
+abstract class $ExpenseCopyWith<$Res> {
+  factory $ExpenseCopyWith(Expense value, $Res Function(Expense) then) =
+      _$ExpenseCopyWithImpl<$Res, Expense>;
   @useResult
   $Res call({
     int? id,
     double amount,
-    @ExpenseCategoryConverter() ExpenseCategory category,
+    ExpenseCategory category,
     DateTime date,
     String? note,
   });
 }
 
 /// @nodoc
-class _$TransactionRecordCopyWithImpl<$Res, $Val extends TransactionRecord>
-    implements $TransactionRecordCopyWith<$Res> {
-  _$TransactionRecordCopyWithImpl(this._value, this._then);
+class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
+    implements $ExpenseCopyWith<$Res> {
+  _$ExpenseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TransactionRecord
+  /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -104,33 +93,32 @@ class _$TransactionRecordCopyWithImpl<$Res, $Val extends TransactionRecord>
 }
 
 /// @nodoc
-abstract class _$$TransactionRecordImplCopyWith<$Res>
-    implements $TransactionRecordCopyWith<$Res> {
-  factory _$$TransactionRecordImplCopyWith(
-    _$TransactionRecordImpl value,
-    $Res Function(_$TransactionRecordImpl) then,
-  ) = __$$TransactionRecordImplCopyWithImpl<$Res>;
+abstract class _$$ExpenseImplCopyWith<$Res> implements $ExpenseCopyWith<$Res> {
+  factory _$$ExpenseImplCopyWith(
+    _$ExpenseImpl value,
+    $Res Function(_$ExpenseImpl) then,
+  ) = __$$ExpenseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
     int? id,
     double amount,
-    @ExpenseCategoryConverter() ExpenseCategory category,
+    ExpenseCategory category,
     DateTime date,
     String? note,
   });
 }
 
 /// @nodoc
-class __$$TransactionRecordImplCopyWithImpl<$Res>
-    extends _$TransactionRecordCopyWithImpl<$Res, _$TransactionRecordImpl>
-    implements _$$TransactionRecordImplCopyWith<$Res> {
-  __$$TransactionRecordImplCopyWithImpl(
-    _$TransactionRecordImpl _value,
-    $Res Function(_$TransactionRecordImpl) _then,
+class __$$ExpenseImplCopyWithImpl<$Res>
+    extends _$ExpenseCopyWithImpl<$Res, _$ExpenseImpl>
+    implements _$$ExpenseImplCopyWith<$Res> {
+  __$$ExpenseImplCopyWithImpl(
+    _$ExpenseImpl _value,
+    $Res Function(_$ExpenseImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of TransactionRecord
+  /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -142,7 +130,7 @@ class __$$TransactionRecordImplCopyWithImpl<$Res>
     Object? note = freezed,
   }) {
     return _then(
-      _$TransactionRecordImpl(
+      _$ExpenseImpl(
         id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
@@ -169,25 +157,21 @@ class __$$TransactionRecordImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$TransactionRecordImpl extends _TransactionRecord {
-  const _$TransactionRecordImpl({
+
+class _$ExpenseImpl implements _Expense {
+  const _$ExpenseImpl({
     this.id,
     required this.amount,
-    @ExpenseCategoryConverter() required this.category,
+    required this.category,
     required this.date,
     this.note,
-  }) : super._();
-
-  factory _$TransactionRecordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TransactionRecordImplFromJson(json);
+  });
 
   @override
   final int? id;
   @override
   final double amount;
   @override
-  @ExpenseCategoryConverter()
   final ExpenseCategory category;
   @override
   final DateTime date;
@@ -196,14 +180,14 @@ class _$TransactionRecordImpl extends _TransactionRecord {
 
   @override
   String toString() {
-    return 'TransactionRecord(id: $id, amount: $amount, category: $category, date: $date, note: $note)';
+    return 'Expense(id: $id, amount: $amount, category: $category, date: $date, note: $note)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TransactionRecordImpl &&
+            other is _$ExpenseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.category, category) ||
@@ -212,57 +196,43 @@ class _$TransactionRecordImpl extends _TransactionRecord {
             (identical(other.note, note) || other.note == note));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, amount, category, date, note);
 
-  /// Create a copy of TransactionRecord
+  /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TransactionRecordImplCopyWith<_$TransactionRecordImpl> get copyWith =>
-      __$$TransactionRecordImplCopyWithImpl<_$TransactionRecordImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TransactionRecordImplToJson(this);
-  }
+  _$$ExpenseImplCopyWith<_$ExpenseImpl> get copyWith =>
+      __$$ExpenseImplCopyWithImpl<_$ExpenseImpl>(this, _$identity);
 }
 
-abstract class _TransactionRecord extends TransactionRecord {
-  const factory _TransactionRecord({
+abstract class _Expense implements Expense {
+  const factory _Expense({
     final int? id,
     required final double amount,
-    @ExpenseCategoryConverter() required final ExpenseCategory category,
+    required final ExpenseCategory category,
     required final DateTime date,
     final String? note,
-  }) = _$TransactionRecordImpl;
-  const _TransactionRecord._() : super._();
-
-  factory _TransactionRecord.fromJson(Map<String, dynamic> json) =
-      _$TransactionRecordImpl.fromJson;
+  }) = _$ExpenseImpl;
 
   @override
   int? get id;
   @override
   double get amount;
   @override
-  @ExpenseCategoryConverter()
   ExpenseCategory get category;
   @override
   DateTime get date;
   @override
   String? get note;
 
-  /// Create a copy of TransactionRecord
+  /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TransactionRecordImplCopyWith<_$TransactionRecordImpl> get copyWith =>
+  _$$ExpenseImplCopyWith<_$ExpenseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

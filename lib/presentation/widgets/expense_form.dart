@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/widgets/category_chip.dart';
 
 class ExpenseForm extends ConsumerStatefulWidget {
   const ExpenseForm({super.key, this.existing, this.onSaved});
 
-  final Transaction? existing;
+  final Expense? existing;
   final VoidCallback? onSaved;
 
   @override
@@ -161,7 +161,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
     }
 
     final note = _noteController.text.trim();
-    final expense = Transaction(
+    final expense = Expense(
       id: widget.existing?.id,
       amount: _parseAmount(_amountController.text)!,
       category: _category,

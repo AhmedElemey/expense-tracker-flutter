@@ -1,13 +1,13 @@
-import 'package:sqflite/sqflite.dart' hide Transaction;
+import 'package:sqflite/sqflite.dart';
 
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
 import 'package:expensetracker/domain/expense_validation.dart';
 import 'package:expensetracker/domain/repositories/transaction_repository.dart';
 
 import '../database/expense_database.dart';
-import '../mappers/transaction_mapper.dart';
-import '../models/transaction_record.dart';
+import '../mappers/expense_mapper.dart';
+import '../models/expense_record.dart';
 
 /// SQLite-backed [TransactionRepository].
 class SqliteTransactionRepository implements TransactionRepository {
@@ -18,24 +18,24 @@ class SqliteTransactionRepository implements TransactionRepository {
   Future<Database> get _db => _database.database;
 
   @override
-  Future<int> insertTransaction(Transaction transaction) async {
-    validateExpenseAmount(transaction.amount);
+  Future<int> insertTransaction(Expense expense) async {
+    validateExpenseAmount(expense.amount);
     return (await _db).insert(
       kTransactionsTable,
-      transaction.toRecord().toMap()..remove(TransactionColumns.id),
+      expense.toRecord().toMap()..remove(TransactionColumns.id),
     );
   }
 
   @override
-  Future<int> updateTransaction(Transaction transaction) async {
-    final id = transaction.id;
+  Future<int> updateTransaction(Expense expense) async {
+    final id = expense.id;
     if (id == null) {
       throw ArgumentError('updateTransaction requires a persisted id');
     }
-    validateExpenseAmount(transaction.amount);
+    validateExpenseAmount(expense.amount);
     return (await _db).update(
       kTransactionsTable,
-      transaction.toRecord().toMap()..remove(TransactionColumns.id),
+      expense.toRecord().toMap()..remove(TransactionColumns.id),
       where: '${TransactionColumns.id} = ?',
       whereArgs: [id],
     );
@@ -51,20 +51,20 @@ class SqliteTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<List<Transaction>> getAllTransactions() async {
+  Future<List<Expense>> getAllTransactions() async {
     final rows = await (await _db).query(
       kTransactionsTable,
       orderBy: '${TransactionColumns.date} DESC, ${TransactionColumns.id} DESC',
     );
     return rows
-        .map(TransactionRecord.fromMap)
+        .map(ExpenseRecord.fromMap)
         .map((record) => record.toDomain())
         .toList();
   }
 
   /// Inclusive of [month]'s first day, exclusive of the next month.
   @override
-  Future<List<Transaction>> getTransactionsByMonth(DateTime month) async {
+  Future<List<Expense>> getTransactionsByMonth(DateTime month) async {
     final bounds = _monthBounds(month);
     final rows = await (await _db).query(
       kTransactionsTable,
@@ -74,7 +74,7 @@ class SqliteTransactionRepository implements TransactionRepository {
       orderBy: '${TransactionColumns.date} DESC, ${TransactionColumns.id} DESC',
     );
     return rows
-        .map(TransactionRecord.fromMap)
+        .map(ExpenseRecord.fromMap)
         .map((record) => record.toDomain())
         .toList();
   }

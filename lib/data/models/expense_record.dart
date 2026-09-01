@@ -3,27 +3,27 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../database/expense_database.dart';
 import 'expense_category.dart';
 
-part 'transaction_record.freezed.dart';
-part 'transaction_record.g.dart';
+part 'expense_record.freezed.dart';
+part 'expense_record.g.dart';
 
 /// Row in the `transactions` SQLite table.
 @freezed
-class TransactionRecord with _$TransactionRecord {
-  const TransactionRecord._();
+class ExpenseRecord with _$ExpenseRecord {
+  const ExpenseRecord._();
 
-  const factory TransactionRecord({
+  const factory ExpenseRecord({
     int? id,
     required double amount,
     @ExpenseCategoryConverter() required ExpenseCategory category,
     required DateTime date,
     String? note,
-  }) = _TransactionRecord;
+  }) = _ExpenseRecord;
 
-  factory TransactionRecord.fromJson(Map<String, dynamic> json) =>
-      _$TransactionRecordFromJson(json);
+  factory ExpenseRecord.fromJson(Map<String, dynamic> json) =>
+      _$ExpenseRecordFromJson(json);
 
-  factory TransactionRecord.fromMap(Map<String, Object?> map) {
-    return TransactionRecord.fromJson(Map<String, dynamic>.from(map));
+  factory ExpenseRecord.fromMap(Map<String, Object?> map) {
+    return ExpenseRecord.fromJson(Map<String, dynamic>.from(map));
   }
 
   Map<String, Object?> toMap() => {

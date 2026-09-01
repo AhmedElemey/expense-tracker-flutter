@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/widgets/expense_form.dart';
 
 class AddExpenseScreen extends StatelessWidget {
   const AddExpenseScreen({super.key, this.existing});
 
-  final Transaction? existing;
+  final Expense? existing;
 
-  static Future<bool> open(
-    BuildContext context, {
-    Transaction? existing,
-  }) async {
+  static Future<bool> open(BuildContext context, {Expense? existing}) async {
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (_) => AddExpenseScreen(existing: existing),

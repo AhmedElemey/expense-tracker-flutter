@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/main.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
@@ -15,14 +15,14 @@ import '../domain/fake_transaction_repository.dart';
 void main() {
   late FakeTransactionRepository repository;
 
-  Transaction expense({
+  Expense expense({
     required int id,
     double amount = 12.5,
     ExpenseCategory category = ExpenseCategory.food,
     required DateTime date,
     String? note,
   }) {
-    return Transaction(
+    return Expense(
       id: id,
       amount: amount,
       category: category,

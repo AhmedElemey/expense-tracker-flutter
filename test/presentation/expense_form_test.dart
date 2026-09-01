@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/main.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
@@ -76,7 +76,7 @@ void main() {
   });
 
   testWidgets('edit screen prefills and updates the expense', (tester) async {
-    final existing = Transaction(
+    final existing = Expense(
       id: 1,
       amount: 8,
       category: ExpenseCategory.food,

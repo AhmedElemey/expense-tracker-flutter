@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/monthly_totals_provider.dart';
@@ -14,13 +14,13 @@ void main() {
   late FakeTransactionRepository repository;
   late ProviderContainer container;
 
-  Transaction expense({
+  Expense expense({
     double amount = 12.5,
     ExpenseCategory category = ExpenseCategory.food,
     DateTime? date,
     String? note = 'Lunch',
   }) {
-    return Transaction(
+    return Expense(
       amount: amount,
       category: category,
       date: date ?? DateTime(2026, 9, 1, 12),

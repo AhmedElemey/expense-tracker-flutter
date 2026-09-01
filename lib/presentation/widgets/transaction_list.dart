@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/widgets/empty_state.dart';
 import 'package:expensetracker/presentation/widgets/transaction_list_item.dart';
@@ -10,15 +10,15 @@ class HistorySection {
   const HistorySection({required this.keyDate, required this.transactions});
 
   final DateTime keyDate;
-  final List<Transaction> transactions;
+  final List<Expense> transactions;
 }
 
 /// Groups already-sorted (newest first) transactions by day or month.
 List<HistorySection> groupTransactions(
-  List<Transaction> items,
+  List<Expense> items,
   HistoryGrouping grouping,
 ) {
-  final grouped = <DateTime, List<Transaction>>{};
+  final grouped = <DateTime, List<Expense>>{};
   for (final item in items) {
     final key = switch (grouping) {
       HistoryGrouping.day => DateTime(
@@ -55,11 +55,11 @@ class TransactionList extends StatelessWidget {
     this.nested = false,
   });
 
-  final List<Transaction> transactions;
+  final List<Expense> transactions;
   final HistoryGrouping grouping;
   final Future<void> Function()? onRefresh;
-  final void Function(Transaction transaction)? onEdit;
-  final Future<void> Function(Transaction transaction)? onDelete;
+  final void Function(Expense transaction)? onEdit;
+  final Future<void> Function(Expense transaction)? onDelete;
   final String emptyMessage;
   final bool nested;
 
@@ -120,9 +120,9 @@ class _HistorySectionView extends StatelessWidget {
   });
 
   final String label;
-  final List<Transaction> transactions;
-  final void Function(Transaction transaction)? onEdit;
-  final Future<void> Function(Transaction transaction)? onDelete;
+  final List<Expense> transactions;
+  final void Function(Expense transaction)? onEdit;
+  final Future<void> Function(Expense transaction)? onDelete;
 
   @override
   Widget build(BuildContext context) {
