@@ -23,6 +23,8 @@
   "expenseDeleted": "تم حذف المصروف",
   "undo": "تراجع",
   "settingsTitle": "الإعدادات",
+  "removeAdsTitle": "إزالة الإعلانات",
+  "removeAdsSubtitle": "إخفاء الشريط الإعلاني على لوحة المعلومات في هذا الجهاز",
   "currencyTitle": "العملة",
   "currencySubtitle": "تظهر في الإجماليات والقوائم ونموذج المصروف",
   "currencyEgyptianPound": "جنيه مصري",

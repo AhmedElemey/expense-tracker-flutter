@@ -90,6 +90,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsTitle => 'الإعدادات';
 
   @override
+  String get removeAdsTitle => 'إزالة الإعلانات';
+
+  @override
+  String get removeAdsSubtitle =>
+      'إخفاء الشريط الإعلاني على لوحة المعلومات في هذا الجهاز';
+
+  @override
   String get currencyTitle => 'العملة';
 
   @override

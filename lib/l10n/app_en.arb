@@ -48,6 +48,8 @@
   "expenseDeleted": "Expense deleted",
   "undo": "Undo",
   "settingsTitle": "Settings",
+  "removeAdsTitle": "Remove Ads",
+  "removeAdsSubtitle": "Hide the dashboard banner on this device",
   "currencyTitle": "Currency",
   "currencySubtitle": "Shown on totals, lists, and the expense form",
   "currencyEgyptianPound": "Egyptian Pound",

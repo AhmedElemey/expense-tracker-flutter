@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:expensetracker/presentation/ads/ad_ids.dart';
 import 'package:expensetracker/presentation/ads/ads_runtime.dart';
+import 'package:expensetracker/presentation/providers/ads_removed_provider.dart';
 import 'package:expensetracker/presentation/providers/ads_tracking_provider.dart';
 
 /// Loaded dashboard banner, or null when hidden / failed / still loading.
@@ -17,11 +18,21 @@ class DashboardBannerAdNotifier extends Notifier<BannerAd?> {
       _disposed = true;
       state?.dispose();
     });
+    ref.listen<bool>(adsRemovedProvider, (_, removed) {
+      if (removed) {
+        state?.dispose();
+        state = null;
+        _inFlight = false;
+      }
+    });
     return null;
   }
 
   Future<void> loadIfNeeded(int widthDp) async {
     if (_disposed || _inFlight || state != null) {
+      return;
+    }
+    if (ref.read(adsRemovedProvider)) {
       return;
     }
     final gate = ref.read(adsLoadGateProvider);

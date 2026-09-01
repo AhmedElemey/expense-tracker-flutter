@@ -236,6 +236,18 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @removeAdsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Ads'**
+  String get removeAdsTitle;
+
+  /// No description provided for @removeAdsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the dashboard banner on this device'**
+  String get removeAdsSubtitle;
+
   /// No description provided for @currencyTitle.
   ///
   /// In en, this message translates to:

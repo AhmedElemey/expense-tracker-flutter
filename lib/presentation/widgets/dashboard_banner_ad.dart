@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'package:expensetracker/presentation/providers/ads_removed_provider.dart';
 import 'package:expensetracker/presentation/providers/ads_tracking_provider.dart';
 import 'package:expensetracker/presentation/providers/dashboard_banner_ad_provider.dart';
 
@@ -27,6 +28,10 @@ class _DashboardBannerAdState extends ConsumerState<DashboardBannerAd> {
         WidgetsBinding.instance.addPostFrameCallback((_) => _load());
       }
     });
+
+    if (ref.watch(adsRemovedProvider)) {
+      return const SizedBox.shrink();
+    }
 
     final gate = ref.watch(adsLoadGateProvider);
     final ad = ref.watch(dashboardBannerAdProvider);

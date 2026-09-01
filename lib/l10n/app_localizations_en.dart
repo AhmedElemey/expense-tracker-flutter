@@ -89,6 +89,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get removeAdsTitle => 'Remove Ads';
+
+  @override
+  String get removeAdsSubtitle => 'Hide the dashboard banner on this device';
+
+  @override
   String get currencyTitle => 'Currency';
 
   @override

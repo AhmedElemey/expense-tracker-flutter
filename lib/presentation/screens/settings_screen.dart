@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 
 import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/format.dart';
+import 'package:expensetracker/presentation/providers/ads_removed_provider.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/locale_provider.dart';
@@ -28,6 +29,7 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final currencySymbol = ref.watch(currencySymbolProvider);
     final localeCode = ref.watch(localeCodeProvider);
+    final adsRemoved = ref.watch(adsRemovedProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
@@ -90,6 +92,19 @@ class SettingsScreen extends ConsumerWidget {
                   ),
               ],
             ),
+          ),
+          const Divider(),
+          SwitchListTile(
+            key: const Key('remove-ads'),
+            secondary: const Icon(Icons.money_off_outlined),
+            title: Text(l10n.removeAdsTitle),
+            subtitle: Text(l10n.removeAdsSubtitle),
+            value: adsRemoved,
+            onChanged: (value) {
+              // TODO: Replace this local SharedPreferences flag with a real
+              // in_app_purchase / StoreKit / Play Billing purchase flow.
+              ref.read(adsRemovedProvider.notifier).setRemoved(value);
+            },
           ),
           const Divider(),
           ListTile(
