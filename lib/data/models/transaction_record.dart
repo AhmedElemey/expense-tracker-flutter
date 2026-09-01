@@ -1,52 +1,36 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../database/expense_database.dart';
 import 'expense_category.dart';
 
+part 'transaction_record.freezed.dart';
+part 'transaction_record.g.dart';
+
 /// Row in the `transactions` SQLite table.
-class TransactionRecord {
-  const TransactionRecord({
-    this.id,
-    required this.amount,
-    required this.category,
-    required this.date,
-    this.note,
-  });
+@freezed
+class TransactionRecord with _$TransactionRecord {
+  const TransactionRecord._();
 
-  final int? id;
-  final double amount;
-  final ExpenseCategory category;
-  final DateTime date;
-  final String? note;
-
-  TransactionRecord copyWith({
+  const factory TransactionRecord({
     int? id,
-    double? amount,
-    ExpenseCategory? category,
-    DateTime? date,
+    required double amount,
+    @ExpenseCategoryConverter() required ExpenseCategory category,
+    required DateTime date,
     String? note,
-  }) {
-    return TransactionRecord(
-      id: id ?? this.id,
-      amount: amount ?? this.amount,
-      category: category ?? this.category,
-      date: date ?? this.date,
-      note: note ?? this.note,
-    );
+  }) = _TransactionRecord;
+
+  factory TransactionRecord.fromJson(Map<String, dynamic> json) =>
+      _$TransactionRecordFromJson(json);
+
+  factory TransactionRecord.fromMap(Map<String, Object?> map) {
+    return TransactionRecord.fromJson(Map<String, dynamic>.from(map));
   }
 
   Map<String, Object?> toMap() => {
-        if (id != null) 'id': id,
-        'amount': amount,
-        'category': category.name,
-        'date': date.toIso8601String(),
-        'note': note,
-      };
-
-  factory TransactionRecord.fromMap(Map<String, Object?> map) {
-    return TransactionRecord(
-      id: map['id'] as int?,
-      amount: (map['amount'] as num).toDouble(),
-      category: ExpenseCategory.fromStorage(map['category'] as String),
-      date: DateTime.parse(map['date'] as String),
-      note: map['note'] as String?,
-    );
-  }
+    if (id != null) TransactionColumns.id: id,
+    TransactionColumns.amount: amount,
+    TransactionColumns.category: category.name,
+    TransactionColumns.date: date.toIso8601String(),
+    TransactionColumns.note: note,
+  };
 }

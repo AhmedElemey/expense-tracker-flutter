@@ -1,27 +1,17 @@
-/// Preset spend categories. Persist [name] in SQLite (`category TEXT`).
-enum ExpenseCategory {
-  food,
-  transport,
-  bills,
-  entertainment,
-  shopping,
-  health,
-  other;
+import 'package:json_annotation/json_annotation.dart';
 
-  String get label => switch (this) {
-        ExpenseCategory.food => 'Food',
-        ExpenseCategory.transport => 'Transport',
-        ExpenseCategory.bills => 'Bills',
-        ExpenseCategory.entertainment => 'Entertainment',
-        ExpenseCategory.shopping => 'Shopping',
-        ExpenseCategory.health => 'Health',
-        ExpenseCategory.other => 'Other',
-      };
+import 'package:expensetracker/domain/entities/expense_category.dart';
 
-  static ExpenseCategory fromStorage(String value) {
-    return ExpenseCategory.values.firstWhere(
-      (c) => c.name == value,
-      orElse: () => ExpenseCategory.other,
-    );
-  }
+export 'package:expensetracker/domain/entities/expense_category.dart';
+
+/// Maps [ExpenseCategory] to its SQLite/JSON string (`food`, `transport`, …).
+class ExpenseCategoryConverter
+    implements JsonConverter<ExpenseCategory, String> {
+  const ExpenseCategoryConverter();
+
+  @override
+  ExpenseCategory fromJson(String json) => ExpenseCategory.fromStorage(json);
+
+  @override
+  String toJson(ExpenseCategory object) => object.name;
 }

@@ -1,0 +1,35 @@
+import 'package:flutter/material.dart';
+
+import 'package:expensetracker/domain/entities/transaction.dart';
+import 'package:expensetracker/presentation/widgets/expense_form.dart';
+
+class AddExpenseScreen extends StatelessWidget {
+  const AddExpenseScreen({super.key, this.existing});
+
+  final Transaction? existing;
+
+  static Future<bool> open(
+    BuildContext context, {
+    Transaction? existing,
+  }) async {
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => AddExpenseScreen(existing: existing),
+        fullscreenDialog: true,
+      ),
+    );
+    return saved ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isEditing = existing != null;
+    return Scaffold(
+      appBar: AppBar(title: Text(isEditing ? 'Edit expense' : 'Add expense')),
+      body: ExpenseForm(
+        existing: existing,
+        onSaved: () => Navigator.of(context).pop(true),
+      ),
+    );
+  }
+}

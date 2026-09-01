@@ -3,6 +3,15 @@ import 'package:sqflite/sqflite.dart';
 
 const kTransactionsTable = 'transactions';
 
+/// Column names for [kTransactionsTable].
+abstract final class TransactionColumns {
+  static const id = 'id';
+  static const amount = 'amount';
+  static const category = 'category';
+  static const date = 'date';
+  static const note = 'note';
+}
+
 /// Opens (and creates) the local SQLite database.
 class ExpenseDatabase {
   ExpenseDatabase({this.path});
@@ -22,12 +31,16 @@ class ExpenseDatabase {
       onCreate: (db, version) async {
         await db.execute('''
 CREATE TABLE $kTransactionsTable (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  amount REAL NOT NULL,
-  category TEXT NOT NULL,
-  date TEXT NOT NULL,
-  note TEXT
+  ${TransactionColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${TransactionColumns.amount} REAL NOT NULL,
+  ${TransactionColumns.category} TEXT NOT NULL,
+  ${TransactionColumns.date} TEXT NOT NULL,
+  ${TransactionColumns.note} TEXT
 )
+''');
+        await db.execute('''
+CREATE INDEX idx_transactions_date
+ON $kTransactionsTable (${TransactionColumns.date})
 ''');
       },
     );

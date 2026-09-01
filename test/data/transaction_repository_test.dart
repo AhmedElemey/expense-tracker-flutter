@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart' hide Transaction;
 
 import 'package:expensetracker/data/database/expense_database.dart';
-import 'package:expensetracker/data/models/expense_category.dart';
-import 'package:expensetracker/data/models/transaction_record.dart';
-import 'package:expensetracker/data/repositories/transaction_repository.dart';
+import 'package:expensetracker/data/repositories/sqlite_transaction_repository.dart';
+import 'package:expensetracker/domain/entities/expense_category.dart';
+import 'package:expensetracker/domain/entities/transaction.dart';
 
 void main() {
   late ExpenseDatabase database;
-  late TransactionRepository repository;
+  late SqliteTransactionRepository repository;
 
   setUpAll(() {
     sqfliteFfiInit();
@@ -17,21 +17,21 @@ void main() {
 
   setUp(() async {
     database = ExpenseDatabase(path: inMemoryDatabasePath);
-    repository = TransactionRepository(database);
+    repository = SqliteTransactionRepository(database);
   });
 
   tearDown(() async {
     await database.close();
   });
 
-  TransactionRecord record({
+  Transaction record({
     int? id,
     double amount = 12.5,
     ExpenseCategory category = ExpenseCategory.food,
     DateTime? date,
     String? note = 'Lunch',
   }) {
-    return TransactionRecord(
+    return Transaction(
       id: id,
       amount: amount,
       category: category,
@@ -40,18 +40,20 @@ void main() {
     );
   }
 
-  test('insertTransaction assigns an id and getAllTransactions returns it',
-      () async {
-    final id = await repository.insertTransaction(record());
-    expect(id, greaterThan(0));
+  test(
+    'insertTransaction assigns an id and getAllTransactions returns it',
+    () async {
+      final id = await repository.insertTransaction(record());
+      expect(id, greaterThan(0));
 
-    final all = await repository.getAllTransactions();
-    expect(all, hasLength(1));
-    expect(all.single.id, id);
-    expect(all.single.amount, 12.5);
-    expect(all.single.category, ExpenseCategory.food);
-    expect(all.single.note, 'Lunch');
-  });
+      final all = await repository.getAllTransactions();
+      expect(all, hasLength(1));
+      expect(all.single.id, id);
+      expect(all.single.amount, 12.5);
+      expect(all.single.category, ExpenseCategory.food);
+      expect(all.single.note, 'Lunch');
+    },
+  );
 
   test('insertTransaction rejects amount <= 0', () async {
     expect(
@@ -87,36 +89,74 @@ void main() {
     expect(await repository.getAllTransactions(), isEmpty);
   });
 
-  test('getTransactionsByMonth and getCategoryTotals isolate that month',
-      () async {
-    await repository.insertTransaction(
-      record(amount: 10, date: DateTime(2026, 8, 31, 23)),
-    );
-    await repository.insertTransaction(
-      record(
-        amount: 20,
-        category: ExpenseCategory.food,
-        date: DateTime(2026, 9, 2),
-      ),
-    );
-    await repository.insertTransaction(
-      record(
-        amount: 5,
-        category: ExpenseCategory.transport,
-        date: DateTime(2026, 9, 15),
-      ),
-    );
-    await repository.insertTransaction(
-      record(amount: 99, date: DateTime(2026, 10, 1)),
-    );
+  test('updateTransaction without an id throws', () async {
+    expect(() => repository.updateTransaction(record()), throwsArgumentError);
+  });
 
-    final september =
-        await repository.getTransactionsByMonth(DateTime(2026, 9));
-    expect(september.map((e) => e.amount), [5, 20]);
+  test('unknown category strings map to other', () {
+    expect(
+      ExpenseCategory.fromStorage('not_a_category'),
+      ExpenseCategory.other,
+    );
+  });
 
-    final totals = await repository.getCategoryTotals(DateTime(2026, 9));
-    expect(totals[ExpenseCategory.food], 20);
-    expect(totals[ExpenseCategory.transport], 5);
-    expect(totals.containsKey(ExpenseCategory.bills), isFalse);
+  test(
+    'getTransactionsByMonth and getCategoryTotals isolate that month',
+    () async {
+      await repository.insertTransaction(
+        record(amount: 10, date: DateTime(2026, 8, 31, 23)),
+      );
+      await repository.insertTransaction(
+        record(
+          amount: 20,
+          category: ExpenseCategory.food,
+          date: DateTime(2026, 9, 2),
+        ),
+      );
+      await repository.insertTransaction(
+        record(
+          amount: 5,
+          category: ExpenseCategory.transport,
+          date: DateTime(2026, 9, 15),
+        ),
+      );
+      await repository.insertTransaction(
+        record(amount: 99, date: DateTime(2026, 10, 1)),
+      );
+
+      final september = await repository.getTransactionsByMonth(
+        DateTime(2026, 9),
+      );
+      expect(september.map((e) => e.amount), [5, 20]);
+
+      final totals = await repository.getCategoryTotals(DateTime(2026, 9));
+      expect(totals[ExpenseCategory.food], 20);
+      expect(totals[ExpenseCategory.transport], 5);
+      expect(totals.containsKey(ExpenseCategory.bills), isFalse);
+    },
+  );
+
+  test(
+    'getTransactionsByMonth includes December and excludes January',
+    () async {
+      await repository.insertTransaction(
+        record(amount: 8, date: DateTime(2026, 12, 31, 23)),
+      );
+      await repository.insertTransaction(
+        record(amount: 50, date: DateTime(2027, 1, 1)),
+      );
+
+      final december = await repository.getTransactionsByMonth(
+        DateTime(2026, 12),
+      );
+      expect(december.map((e) => e.amount), [8]);
+      expect(await repository.getCategoryTotals(DateTime(2026, 12)), {
+        ExpenseCategory.food: 8,
+      });
+    },
+  );
+
+  test('getCategoryTotals is empty when the month has no rows', () async {
+    expect(await repository.getCategoryTotals(DateTime(2026, 1)), isEmpty);
   });
 }
