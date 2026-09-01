@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/l10n/app_localizations.dart';
+import 'package:expensetracker/presentation/ads/mobile_ads_init.dart';
 import 'package:expensetracker/presentation/providers/locale_provider.dart';
 import 'package:expensetracker/presentation/screens/home_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeMobileAds();
   runApp(const ProviderScope(child: ExpenseTrackerApp()));
 }
 
