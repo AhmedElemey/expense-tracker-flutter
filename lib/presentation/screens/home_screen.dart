@@ -15,6 +15,7 @@ import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
 import 'package:expensetracker/presentation/screens/history_screen.dart';
 import 'package:expensetracker/presentation/screens/settings_screen.dart';
 import 'package:expensetracker/presentation/widgets/category_pie_chart.dart';
+import 'package:expensetracker/presentation/widgets/dashboard_banner_ad.dart';
 import 'package:expensetracker/presentation/widgets/empty_state.dart';
 import 'package:expensetracker/presentation/widgets/transaction_list.dart';
 
@@ -53,6 +54,7 @@ class HomeScreen extends ConsumerWidget {
         onPressed: () => AddExpenseScreen.open(context),
         child: const Icon(Icons.add),
       ),
+      bottomNavigationBar: const DashboardBannerAd(),
       body: _body(
         context,
         ref,
