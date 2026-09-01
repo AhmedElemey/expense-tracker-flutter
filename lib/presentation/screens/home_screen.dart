@@ -7,6 +7,7 @@ import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/category_l10n.dart';
 import 'package:expensetracker/presentation/format.dart';
+import 'package:expensetracker/presentation/providers/ads_tracking_provider.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/monthly_totals_provider.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
@@ -28,6 +29,8 @@ class HomeScreen extends ConsumerWidget {
     final totals = ref.watch(monthlyTotalsProvider);
     final filtered = ref.watch(filteredTransactionsProvider);
     final currencySymbol = ref.watch(currencySymbolProvider);
+    // First relevant screen: request ATT after consent, before personalized ads.
+    ref.watch(adsTrackingProvider);
 
     return Scaffold(
       appBar: AppBar(
