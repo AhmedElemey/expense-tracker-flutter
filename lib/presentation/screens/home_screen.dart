@@ -50,7 +50,15 @@ class HomeScreen extends ConsumerWidget {
         onPressed: () => AddExpenseScreen.open(context),
         child: const Icon(Icons.add),
       ),
-      body: _body(context, ref, month, filter, totals, filtered, currencySymbol),
+      body: _body(
+        context,
+        ref,
+        month,
+        filter,
+        totals,
+        filtered,
+        currencySymbol,
+      ),
     );
   }
 

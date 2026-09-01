@@ -248,6 +248,36 @@ abstract class AppLocalizations {
   /// **'Shown on totals, lists, and the expense form'**
   String get currencySubtitle;
 
+  /// No description provided for @currencyEgyptianPound.
+  ///
+  /// In en, this message translates to:
+  /// **'Egyptian Pound'**
+  String get currencyEgyptianPound;
+
+  /// No description provided for @currencyDollar.
+  ///
+  /// In en, this message translates to:
+  /// **'Dollar'**
+  String get currencyDollar;
+
+  /// No description provided for @currencyEuro.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro'**
+  String get currencyEuro;
+
+  /// No description provided for @currencyPound.
+  ///
+  /// In en, this message translates to:
+  /// **'Sterling'**
+  String get currencyPound;
+
+  /// No description provided for @currencyYen.
+  ///
+  /// In en, this message translates to:
+  /// **'Yen'**
+  String get currencyYen;
+
   /// No description provided for @languageTitle.
   ///
   /// In en, this message translates to:
@@ -355,6 +385,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Category'**
   String get categoryLabel;
+
+  /// No description provided for @customCategoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom category'**
+  String get customCategoryLabel;
+
+  /// No description provided for @customCategoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Gym, gifts…'**
+  String get customCategoryHint;
+
+  /// No description provided for @enterCustomCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a category name'**
+  String get enterCustomCategory;
 
   /// No description provided for @noteLabel.
   ///

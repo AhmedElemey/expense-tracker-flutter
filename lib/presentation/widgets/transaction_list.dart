@@ -113,7 +113,8 @@ class TransactionList extends StatelessWidget {
           onEdit: onEdit,
           onDelete: onDelete,
           currencySymbol: currencySymbol,
-          isThisMonth: markThisMonth &&
+          isThisMonth:
+              markThisMonth &&
               calendarMonth(section.keyDate) == calendarMonth(),
         ),
     ];

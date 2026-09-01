@@ -97,9 +97,9 @@ class CategoryPieChart extends StatelessWidget {
           TextButton(
             onPressed: () => onCategoryTapped(selected!),
             child: Text(
-              AppLocalizations.of(context).showAllTotal(
-                formatAmount(total, symbol: currencySymbol),
-              ),
+              AppLocalizations.of(
+                context,
+              ).showAllTotal(formatAmount(total, symbol: currencySymbol)),
             ),
           ),
       ],

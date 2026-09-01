@@ -48,7 +48,7 @@ class SettingsScreen extends ConsumerWidget {
                   selected: localeCode == 'en',
                   onSelected: (selected) {
                     if (selected) {
-                      setAppLocale(ref, 'en');
+                      ref.read(localeCodeProvider.notifier).setLocale('en');
                     }
                   },
                 ),
@@ -58,7 +58,7 @@ class SettingsScreen extends ConsumerWidget {
                   selected: localeCode == 'ar',
                   onSelected: (selected) {
                     if (selected) {
-                      setAppLocale(ref, 'ar');
+                      ref.read(localeCodeProvider.notifier).setLocale('ar');
                     }
                   },
                 ),
@@ -76,15 +76,15 @@ class SettingsScreen extends ConsumerWidget {
             child: Wrap(
               spacing: 8,
               children: [
-                for (final symbol in kCurrencySymbols)
+                for (final currency in kCurrencies)
                   ChoiceChip(
-                    key: Key('currency-$symbol'),
-                    label: Text(symbol),
-                    selected: currencySymbol == symbol,
+                    key: Key('currency-${currency.symbol}'),
+                    label: Text(currency.chipLabel(l10n)),
+                    selected: currencySymbol == currency.symbol,
                     onSelected: (selected) {
                       if (selected) {
                         ref.read(currencySymbolProvider.notifier).state =
-                            symbol;
+                            currency.symbol;
                       }
                     },
                   ),

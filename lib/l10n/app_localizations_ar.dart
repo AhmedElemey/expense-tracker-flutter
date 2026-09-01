@@ -96,6 +96,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get currencySubtitle => 'تظهر في الإجماليات والقوائم ونموذج المصروف';
 
   @override
+  String get currencyEgyptianPound => 'جنيه مصري';
+
+  @override
+  String get currencyDollar => 'دولار';
+
+  @override
+  String get currencyEuro => 'يورو';
+
+  @override
+  String get currencyPound => 'جنيه إسترليني';
+
+  @override
+  String get currencyYen => 'ين';
+
+  @override
   String get languageTitle => 'اللغة';
 
   @override
@@ -161,6 +176,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get categoryLabel => 'الفئة';
+
+  @override
+  String get customCategoryLabel => 'فئة مخصصة';
+
+  @override
+  String get customCategoryHint => 'مثال: نادي رياضي، هدايا…';
+
+  @override
+  String get enterCustomCategory => 'أدخل اسم الفئة';
 
   @override
   String get noteLabel => 'ملاحظة (اختياري)';

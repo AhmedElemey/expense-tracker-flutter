@@ -95,6 +95,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currencySubtitle => 'Shown on totals, lists, and the expense form';
 
   @override
+  String get currencyEgyptianPound => 'Egyptian Pound';
+
+  @override
+  String get currencyDollar => 'Dollar';
+
+  @override
+  String get currencyEuro => 'Euro';
+
+  @override
+  String get currencyPound => 'Sterling';
+
+  @override
+  String get currencyYen => 'Yen';
+
+  @override
   String get languageTitle => 'Language';
 
   @override
@@ -159,6 +174,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryLabel => 'Category';
+
+  @override
+  String get customCategoryLabel => 'Custom category';
+
+  @override
+  String get customCategoryHint => 'e.g. Gym, gifts…';
+
+  @override
+  String get enterCustomCategory => 'Enter a category name';
 
   @override
   String get noteLabel => 'Note (optional)';

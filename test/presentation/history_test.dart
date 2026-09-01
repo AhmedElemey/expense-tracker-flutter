@@ -83,18 +83,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('History'), findsOneWidget);
-    expect(
-      find.text(formatDay(DateTime(2026, 9, 1), 'en')),
-      findsWidgets,
-    );
-    expect(
-      find.text(formatDay(DateTime(2026, 9, 15), 'en')),
-      findsWidgets,
-    );
+    expect(find.text(formatDay(DateTime(2026, 9, 1), 'en')), findsWidgets);
+    expect(find.text(formatDay(DateTime(2026, 9, 15), 'en')), findsWidgets);
     expect(find.text('Lunch'), findsOneWidget);
     expect(find.text('Taxi'), findsOneWidget);
-    expect(find.text(r'$8.00'), findsOneWidget);
-    expect(find.text(r'$20.00'), findsOneWidget);
+    expect(find.text('E£8.00'), findsOneWidget);
+    expect(find.text('E£20.00'), findsOneWidget);
 
     await tester.drag(
       find.byKey(const ValueKey('transaction-1')),
@@ -127,7 +121,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Expense deleted'), findsOneWidget);
-    tester.widget<SnackBarAction>(find.byKey(const Key('undo-delete'))).onPressed();
+    tester
+        .widget<SnackBarAction>(find.byKey(const Key('undo-delete')))
+        .onPressed();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
@@ -150,14 +146,8 @@ void main() {
     await tester.tap(find.text('Month'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.text(formatMonth(DateTime(2026, 9), 'en')),
-      findsOneWidget,
-    );
-    expect(
-      find.text(formatMonth(DateTime(2026, 10), 'en')),
-      findsOneWidget,
-    );
+    expect(find.text(formatMonth(DateTime(2026, 9), 'en')), findsOneWidget);
+    expect(find.text(formatMonth(DateTime(2026, 10), 'en')), findsOneWidget);
   });
 
   testWidgets('tap opens edit and saving updates the row', (tester) async {
@@ -177,8 +167,8 @@ void main() {
     await tester.tap(find.byKey(const Key('expense-save')));
     await tester.pumpAndSettle();
 
-    expect(find.text(r'$40.00'), findsOneWidget);
-    expect(find.text(r'$8.00'), findsNothing);
+    expect(find.text('E£40.00'), findsOneWidget);
+    expect(find.text('E£8.00'), findsNothing);
     expect(repository.items.single.amount, 40);
   });
 

@@ -5,15 +5,9 @@ import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/providers/locale_provider.dart';
 import 'package:expensetracker/presentation/screens/home_screen.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final saved = normalizeLocaleCode(await loadSavedLocaleCode());
-  runApp(
-    ProviderScope(
-      overrides: [localeCodeProvider.overrideWith((ref) => saved)],
-      child: const ExpenseTrackerApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: ExpenseTrackerApp()));
 }
 
 class ExpenseTrackerApp extends ConsumerWidget {

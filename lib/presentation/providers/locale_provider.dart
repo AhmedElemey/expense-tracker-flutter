@@ -5,8 +5,6 @@ const kLocalePrefsKey = 'localeCode';
 
 const kSupportedLocaleCodes = ['en', 'ar'];
 
-final localeCodeProvider = StateProvider<String>((ref) => 'en');
-
 String normalizeLocaleCode(String? code) {
   if (code != null && kSupportedLocaleCodes.contains(code)) {
     return code;
@@ -14,18 +12,49 @@ String normalizeLocaleCode(String? code) {
   return 'en';
 }
 
-Future<String?> loadSavedLocaleCode() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(kLocalePrefsKey);
+class LocaleCodeNotifier extends Notifier<String> {
+  var _hydrated = false;
+
+  @override
+  String build() {
+    _hydrate();
+    return 'en';
+  }
+
+  Future<void> setLocale(String code) async {
+    _hydrated = true;
+    final normalized = normalizeLocaleCode(code);
+    state = normalized;
+    await _persist(normalized);
+  }
+
+  Future<void> _hydrate() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (_hydrated) {
+        return;
+      }
+      _hydrated = true;
+      final saved = prefs.getString(kLocalePrefsKey);
+      if (saved == null) {
+        return;
+      }
+      state = normalizeLocaleCode(saved);
+    } catch (_) {
+      _hydrated = true;
+    }
+  }
+
+  Future<void> _persist(String code) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(kLocalePrefsKey, code);
+    } catch (_) {
+      // Locale still applies for this session if prefs fail.
+    }
+  }
 }
 
-Future<void> saveLocaleCode(String code) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString(kLocalePrefsKey, code);
-}
-
-void setAppLocale(WidgetRef ref, String code) {
-  final normalized = normalizeLocaleCode(code);
-  ref.read(localeCodeProvider.notifier).state = normalized;
-  saveLocaleCode(normalized);
-}
+final localeCodeProvider = NotifierProvider<LocaleCodeNotifier, String>(
+  LocaleCodeNotifier.new,
+);

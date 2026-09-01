@@ -1,15 +1,40 @@
 import 'package:intl/intl.dart';
 
-const kDefaultCurrencySymbol = r'$';
+import 'package:expensetracker/l10n/app_localizations.dart';
 
-const kCurrencySymbols = <String>[r'$', '€', '£', '¥'];
+const kDefaultCurrencySymbol = 'E£';
+
+class AppCurrency {
+  const AppCurrency({required this.symbol, required this.id});
+
+  final String symbol;
+  final String id;
+
+  String localizedName(AppLocalizations l10n) {
+    return switch (id) {
+      'egp' => l10n.currencyEgyptianPound,
+      'usd' => l10n.currencyDollar,
+      'eur' => l10n.currencyEuro,
+      'gbp' => l10n.currencyPound,
+      'jpy' => l10n.currencyYen,
+      _ => symbol,
+    };
+  }
+
+  String chipLabel(AppLocalizations l10n) => '${localizedName(l10n)} $symbol';
+}
+
+const kCurrencies = <AppCurrency>[
+  AppCurrency(symbol: 'E£', id: 'egp'),
+  AppCurrency(symbol: r'$', id: 'usd'),
+  AppCurrency(symbol: '€', id: 'eur'),
+  AppCurrency(symbol: '£', id: 'gbp'),
+  AppCurrency(symbol: '¥', id: 'jpy'),
+];
 
 /// Currency amounts always use Western digits so they stay readable next to
-/// `$` / `€` / `£` / `¥`, regardless of the UI locale.
-String formatAmount(
-  double amount, {
-  String symbol = kDefaultCurrencySymbol,
-}) {
+/// the selected currency symbol, regardless of the UI locale.
+String formatAmount(double amount, {String symbol = kDefaultCurrencySymbol}) {
   return '$symbol${NumberFormat('#,##0.00', 'en_US').format(amount)}';
 }
 
