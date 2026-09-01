@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
+import 'package:expensetracker/presentation/category_visuals.dart';
 import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/widgets/category_chip.dart';
 import 'package:expensetracker/presentation/widgets/empty_state.dart';

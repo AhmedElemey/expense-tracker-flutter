@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
+import 'package:expensetracker/presentation/category_visuals.dart';
 
 class CategoryChip extends StatelessWidget {
   const CategoryChip({

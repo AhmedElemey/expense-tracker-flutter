@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
+import 'package:expensetracker/presentation/category_visuals.dart';
 import 'package:expensetracker/presentation/format.dart';
 
 class TransactionListItem extends StatelessWidget {
