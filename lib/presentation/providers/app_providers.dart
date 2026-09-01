@@ -5,8 +5,10 @@ import 'package:expensetracker/data/repositories/sqlite_transaction_repository.d
 import 'package:expensetracker/domain/repositories/transaction_repository.dart';
 import 'package:expensetracker/domain/usecases/add_expense.dart';
 import 'package:expensetracker/domain/usecases/delete_expense.dart';
+import 'package:expensetracker/domain/usecases/export_expenses.dart';
 import 'package:expensetracker/domain/usecases/get_history.dart';
 import 'package:expensetracker/domain/usecases/get_monthly_totals.dart';
+import 'package:expensetracker/domain/usecases/import_expenses.dart';
 import 'package:expensetracker/domain/usecases/update_expense.dart';
 
 final expenseDatabaseProvider = Provider<ExpenseDatabase>((ref) {
@@ -37,4 +39,12 @@ final getHistoryProvider = Provider<GetHistory>((ref) {
 
 final getMonthlyTotalsProvider = Provider<GetMonthlyTotals>((ref) {
   return GetMonthlyTotals(ref.watch(transactionRepositoryProvider));
+});
+
+final exportExpensesProvider = Provider<ExportExpenses>((ref) {
+  return ExportExpenses(ref.watch(transactionRepositoryProvider));
+});
+
+final importExpensesProvider = Provider<ImportExpenses>((ref) {
+  return ImportExpenses(ref.watch(transactionRepositoryProvider));
 });

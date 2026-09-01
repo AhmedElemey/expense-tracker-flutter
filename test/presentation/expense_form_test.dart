@@ -24,6 +24,14 @@ void main() {
     repository = FakeTransactionRepository();
   });
 
+  testWidgets('settings shows export and import actions', (tester) async {
+    await tester.pumpWidget(app());
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+    expect(find.text('Export data'), findsOneWidget);
+    expect(find.text('Import data'), findsOneWidget);
+  });
+
   testWidgets('FAB opens the add expense screen', (tester) async {
     await tester.pumpWidget(app());
 

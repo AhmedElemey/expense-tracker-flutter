@@ -11,6 +11,7 @@ import 'package:expensetracker/presentation/providers/monthly_totals_provider.da
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
 import 'package:expensetracker/presentation/screens/history_screen.dart';
+import 'package:expensetracker/presentation/screens/settings_screen.dart';
 import 'package:expensetracker/presentation/widgets/category_pie_chart.dart';
 import 'package:expensetracker/presentation/widgets/empty_state.dart';
 import 'package:expensetracker/presentation/widgets/transaction_list.dart';
@@ -33,6 +34,11 @@ class HomeScreen extends ConsumerWidget {
             tooltip: 'History',
             onPressed: () => HistoryScreen.open(context),
             icon: const Icon(Icons.history),
+          ),
+          IconButton(
+            tooltip: 'Settings',
+            onPressed: () => SettingsScreen.open(context),
+            icon: const Icon(Icons.settings),
           ),
         ],
       ),
