@@ -191,5 +191,6 @@
   "archivedLabel": "Archived",
   "filterByDateTooltip": "Filter by date",
   "clearDateFilterTooltip": "Clear date filter",
-  "noExpensesInRange": "No expenses in this date range."
+  "noExpensesInRange": "No expenses in this date range.",
+  "noTransfersInRange": "No transfers in this date range."
 }

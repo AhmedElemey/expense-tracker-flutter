@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/data/receipts/receipt_storage.dart';
@@ -162,3 +163,9 @@ final accountTransfersProvider = AsyncNotifierProvider.family<
   List<AccountTransfer>,
   int
 >(AccountTransfersNotifier.new);
+
+/// Optional From/To range narrowing one account's transfer list on its
+/// detail screen. Keyed per account so switching accounts doesn't carry a
+/// filter over, and independent of the History screen's own date filter.
+final accountTransferDateRangeProvider =
+    StateProvider.family<DateTimeRange?, int>((ref, accountId) => null);

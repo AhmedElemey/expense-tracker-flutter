@@ -763,6 +763,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No expenses in this date range.'**
   String get noExpensesInRange;
+
+  /// No description provided for @noTransfersInRange.
+  ///
+  /// In en, this message translates to:
+  /// **'No transfers in this date range.'**
+  String get noTransfersInRange;
 }
 
 class _AppLocalizationsDelegate

@@ -34,6 +34,8 @@ class AccountDetailScreen extends ConsumerWidget {
     final accounts = ref.watch(accountsProvider);
     final transfers = ref.watch(accountTransfersProvider(accountId));
     final currencySymbol = ref.watch(currencySymbolProvider);
+    final dateRange = ref.watch(accountTransferDateRangeProvider(accountId));
+    final localeName = Localizations.localeOf(context).toString();
 
     return accounts.when(
       loading: () => Scaffold(
@@ -60,6 +62,12 @@ class AccountDetailScreen extends ConsumerWidget {
           appBar: AppBar(
             title: Text(account.name),
             actions: [
+              IconButton(
+                key: const Key('account-date-filter'),
+                tooltip: l10n.filterByDateTooltip,
+                icon: const Icon(Icons.date_range_outlined),
+                onPressed: () => _pickDateRange(context, ref, dateRange),
+              ),
               IconButton(
                 tooltip: l10n.editAccountTitle,
                 icon: const Icon(Icons.edit_outlined),
@@ -99,6 +107,40 @@ class AccountDetailScreen extends ConsumerWidget {
                     currencySymbol: currencySymbol,
                   ),
                 ),
+                if (dateRange != null)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                        16,
+                        0,
+                        16,
+                        8,
+                      ),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Chip(
+                          key: const Key('account-date-filter-chip'),
+                          avatar: const Icon(
+                            Icons.date_range_outlined,
+                            size: 18,
+                          ),
+                          label: Text(
+                            '${formatDay(dateRange.start, localeName)} – '
+                            '${formatDay(dateRange.end, localeName)}',
+                          ),
+                          onDeleted: () => ref
+                              .read(
+                                accountTransferDateRangeProvider(
+                                  accountId,
+                                ).notifier,
+                              )
+                              .state = null,
+                          deleteButtonTooltipMessage:
+                              l10n.clearDateFilterTooltip,
+                        ),
+                      ),
+                    ),
+                  ),
                 SliverToBoxAdapter(
                   child: transfers.when(
                     loading: () => const Padding(
@@ -108,12 +150,24 @@ class AccountDetailScreen extends ConsumerWidget {
                     error: (error, _) => ErrorState(
                       message: l10n.couldNotLoadTransfers(error),
                     ),
-                    data: (items) => _TransferList(
-                      items: items,
-                      accountId: accountId,
-                      accountsById: accountsById,
-                      currencySymbol: currencySymbol,
-                    ),
+                    data: (items) {
+                      final filtered = dateRange == null
+                          ? items
+                          : items
+                                .where(
+                                  (t) => isInDateRange(t.date, dateRange),
+                                )
+                                .toList();
+                      return _TransferList(
+                        items: filtered,
+                        accountId: accountId,
+                        accountsById: accountsById,
+                        currencySymbol: currencySymbol,
+                        emptyMessage: dateRange == null
+                            ? l10n.noTransfersYet
+                            : l10n.noTransfersInRange,
+                      );
+                    },
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 88)),
@@ -139,6 +193,25 @@ class AccountDetailScreen extends ConsumerWidget {
     if (!account.archived) {
       Navigator.of(context).pop();
     }
+  }
+
+  Future<void> _pickDateRange(
+    BuildContext context,
+    WidgetRef ref,
+    DateTimeRange? current,
+  ) async {
+    final now = DateTime.now();
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(now.year + 5, 12, 31),
+      initialDateRange: current,
+    );
+    if (picked == null) {
+      return;
+    }
+    ref.read(accountTransferDateRangeProvider(accountId).notifier).state =
+        picked;
   }
 }
 
@@ -188,20 +261,21 @@ class _TransferList extends ConsumerWidget {
     required this.accountId,
     required this.accountsById,
     required this.currencySymbol,
+    required this.emptyMessage,
   });
 
   final List<AccountTransfer> items;
   final int accountId;
   final Map<int, Account> accountsById;
   final String currencySymbol;
+  final String emptyMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     if (items.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 32),
-        child: EmptyState(message: l10n.noTransfersYet),
+        child: EmptyState(message: emptyMessage),
       );
     }
     return Column(

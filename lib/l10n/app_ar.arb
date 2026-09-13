@@ -110,5 +110,6 @@
   "archivedLabel": "مؤرشف",
   "filterByDateTooltip": "تصفية حسب التاريخ",
   "clearDateFilterTooltip": "إزالة تصفية التاريخ",
-  "noExpensesInRange": "لا توجد مصروفات ضمن هذا النطاق الزمني."
+  "noExpensesInRange": "لا توجد مصروفات ضمن هذا النطاق الزمني.",
+  "noTransfersInRange": "لا توجد تحويلات ضمن هذا النطاق الزمني."
 }

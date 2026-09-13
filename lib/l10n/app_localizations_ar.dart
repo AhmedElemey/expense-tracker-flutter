@@ -383,4 +383,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noExpensesInRange => 'لا توجد مصروفات ضمن هذا النطاق الزمني.';
+
+  @override
+  String get noTransfersInRange => 'لا توجد تحويلات ضمن هذا النطاق الزمني.';
 }

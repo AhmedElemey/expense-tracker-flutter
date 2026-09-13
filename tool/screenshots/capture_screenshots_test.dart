@@ -703,4 +703,84 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '4_filter_cleared');
   });
+
+  testWidgets('filter an account detail\'s transfers by a date range', (
+    tester,
+  ) async {
+    const flow = 'account_date_filter';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    final visaId = await accountRepository.insertAccount(
+      Account(
+        name: 'Visa',
+        type: AccountType.card,
+        initialBalance: 1500,
+        colorValue: 0xFF1565C0,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+    final cashId = await accountRepository.insertAccount(
+      Account(
+        name: 'Cash',
+        type: AccountType.cash,
+        initialBalance: 200,
+        colorValue: 0xFF2E7D32,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+
+    // All within the current month so the default single-month calendar
+    // view can select them without paging.
+    final now = DateTime.now();
+    Future<void> seed(int day, double amount, String note) =>
+        accountRepository.insertTransfer(
+          AccountTransfer(
+            fromAccountId: visaId,
+            toAccountId: cashId,
+            amount: amount,
+            note: note,
+            date: DateTime(now.year, now.month, day, 12),
+          ),
+        );
+    await seed(1, 50, 'Early in the month');
+    await seed(10, 100, 'Range start');
+    await seed(15, 75, 'Middle of range');
+    await seed(25, 60, 'Late in the month');
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Accounts'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Visa'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_detail_unfiltered');
+
+    await tester.tap(find.byKey(const Key('account-date-filter')));
+    await tester.pumpAndSettle();
+
+    // Pick day 10 as the start and day 20 as the end of the range. The
+    // range picker keeps adjacent months mounted in its scrollable, so
+    // `.first` targets the current (visible) page's cell; its confirm
+    // action is labeled "Save" (not "OK", which is the single-date
+    // picker's label).
+    await tester.tap(find.text('10').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('20').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_detail_filtered');
+
+    await tester.tap(find.byIcon(Icons.cancel));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_detail_filter_cleared');
+  });
 }
