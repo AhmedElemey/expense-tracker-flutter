@@ -398,4 +398,49 @@ void main() {
     await settleWithRealIo(tester);
     await capture(tester, repaintKey, flow, '4_receipt_full_view');
   });
+
+  testWidgets('accounts list with an archived account shown', (
+    tester,
+  ) async {
+    const flow = 'archived_accounts';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    await accountRepository.insertAccount(
+      Account(
+        name: 'Visa',
+        type: AccountType.card,
+        initialBalance: 1500,
+        colorValue: 0xFF1565C0,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+    // Seeded already-archived, no need to archive it through the UI.
+    await accountRepository.insertAccount(
+      Account(
+        name: 'Old Prepaid Card',
+        type: AccountType.card,
+        initialBalance: 50,
+        colorValue: 0xFFC62828,
+        archived: true,
+        createdAt: DateTime(2025, 1, 1),
+      ),
+    );
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+
+    await tester.tap(find.byTooltip('Accounts'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_archived_hidden_by_default');
+
+    await tester.tap(find.byTooltip('Show archived accounts'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_archived_shown');
+  });
 }
