@@ -595,4 +595,53 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '3_dashboard_after_edit');
   });
+
+  testWidgets('delete an expense, with undo', (tester) async {
+    const flow = 'delete_expense';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    final now = DateTime.now();
+    final lunchId = await repository.insertTransaction(
+      Expense(
+        amount: 12.5,
+        category: ExpenseCategory.food,
+        date: DateTime(now.year, now.month, now.day, 12, 30),
+        note: 'Lunch with the team',
+      ),
+    );
+    await repository.insertTransaction(
+      Expense(
+        amount: 40,
+        category: ExpenseCategory.transport,
+        date: DateTime(now.year, now.month, now.day, 9, 0),
+        note: 'Ride to the airport',
+      ),
+    );
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_history_before');
+
+    // Swipe the Lunch row away (Dismissible, direction: endToStart).
+    await tester.drag(
+      find.byKey(Key('transaction-$lunchId')),
+      const Offset(-500, 0),
+    );
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_deleted_with_undo_snackbar');
+
+    await tester.tap(find.byKey(const Key('undo-delete')));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_restored_after_undo');
+  });
 }
