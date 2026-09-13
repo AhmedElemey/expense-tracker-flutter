@@ -443,4 +443,55 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '2_archived_shown');
   });
+
+  testWidgets('archive / unarchive an account from its detail screen', (
+    tester,
+  ) async {
+    const flow = 'archive_toggle';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    await accountRepository.insertAccount(
+      Account(
+        name: 'Visa',
+        type: AccountType.card,
+        initialBalance: 1500,
+        colorValue: 0xFF1565C0,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+
+    await tester.tap(find.byTooltip('Accounts'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Visa'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_detail_active');
+
+    // Archiving pops back to the accounts list, since the account
+    // disappears from the default (non-archived) view.
+    await tester.tap(find.byTooltip('Archive account'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_accounts_after_archive');
+
+    await tester.tap(find.byTooltip('Show archived accounts'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_accounts_showing_archived');
+
+    await tester.tap(find.text('Visa'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '4_detail_archived');
+
+    // Unarchiving stays on the detail screen.
+    await tester.tap(find.byTooltip('Unarchive account'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '5_detail_after_unarchive');
+  });
 }
