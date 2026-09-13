@@ -38,6 +38,10 @@ dev_dependencies:
   freezed: ^2.5.2
   json_serializable: ^6.8.0
   flutter_launcher_icons: ^0.14.4
+  # Used directly by tool/screenshots/ to fake the image_picker /
+  # path_provider platform channels when rendering screenshots headlessly.
+  image_picker_platform_interface: ^2.11.1
+  path_provider_platform_interface: ^2.1.2
 
 flutter:
   uses-material-design: true
