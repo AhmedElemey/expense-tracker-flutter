@@ -386,4 +386,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noTransfersInRange => 'لا توجد تحويلات ضمن هذا النطاق الزمني.';
+
+  @override
+  String get spentInRange => 'الإنفاق ضمن هذا النطاق';
+
+  @override
+  String get inThisRange => 'ضمن هذا النطاق';
+
+  @override
+  String categoryInRange(String category) {
+    return '$category ضمن هذا النطاق';
+  }
 }

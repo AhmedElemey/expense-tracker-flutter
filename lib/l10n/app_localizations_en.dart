@@ -382,4 +382,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTransfersInRange => 'No transfers in this date range.';
+
+  @override
+  String get spentInRange => 'Spent in this range';
+
+  @override
+  String get inThisRange => 'In this range';
+
+  @override
+  String categoryInRange(String category) {
+    return '$category in this range';
+  }
 }

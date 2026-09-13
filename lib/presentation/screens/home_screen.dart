@@ -27,6 +27,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final month = ref.watch(selectedMonthProvider);
+    final dateRange = ref.watch(dashboardDateRangeProvider);
     final filter = ref.watch(categoryFilterProvider);
     final totals = ref.watch(monthlyTotalsProvider);
     final filtered = ref.watch(filteredTransactionsProvider);
@@ -38,6 +39,12 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.appTitle),
         actions: [
+          IconButton(
+            key: const Key('dashboard-date-filter'),
+            tooltip: l10n.filterByDateTooltip,
+            onPressed: () => _pickDateRange(context, ref, dateRange),
+            icon: const Icon(Icons.date_range_outlined),
+          ),
           IconButton(
             tooltip: l10n.accountsTitle,
             onPressed: () => AccountsScreen.open(context),
@@ -65,6 +72,7 @@ class HomeScreen extends ConsumerWidget {
         context,
         ref,
         month,
+        dateRange,
         filter,
         totals,
         filtered,
@@ -73,10 +81,29 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _pickDateRange(
+    BuildContext context,
+    WidgetRef ref,
+    DateTimeRange? current,
+  ) async {
+    final now = DateTime.now();
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(now.year + 5, 12, 31),
+      initialDateRange: current,
+    );
+    if (picked == null) {
+      return;
+    }
+    ref.read(dashboardDateRangeProvider.notifier).setRange(picked);
+  }
+
   Widget _body(
     BuildContext context,
     WidgetRef ref,
     DateTime month,
+    DateTimeRange? dateRange,
     ExpenseCategory? filter,
     AsyncValue<MonthlyTotals> totals,
     AsyncValue<List<Expense>> filtered,
@@ -115,10 +142,13 @@ class HomeScreen extends ConsumerWidget {
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
               child: Column(
                 children: [
-                  _MonthSelector(month: month),
+                  if (dateRange == null)
+                    _MonthSelector(month: month)
+                  else
+                    _DateRangeChip(dateRange: dateRange),
                   const SizedBox(height: 16),
                   Text(
-                    l10n.spentThisMonth,
+                    dateRange == null ? l10n.spentThisMonth : l10n.spentInRange,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   Text(
@@ -141,9 +171,7 @@ class HomeScreen extends ConsumerWidget {
                   Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
-                      filter == null
-                          ? l10n.thisMonth
-                          : l10n.categoryThisMonth(filter.localizedName(l10n)),
+                      _periodLabel(l10n, dateRange, filter),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
@@ -157,7 +185,9 @@ class HomeScreen extends ConsumerWidget {
               transactions: items,
               grouping: HistoryGrouping.day,
               currencySymbol: currencySymbol,
-              emptyMessage: filter == null
+              emptyMessage: dateRange != null
+                  ? l10n.noExpensesInRange
+                  : filter == null
                   ? l10n.noExpensesThisMonth
                   : l10n.noCategoryExpensesThisMonth(
                       filter.localizedName(l10n),
@@ -178,6 +208,21 @@ class HomeScreen extends ConsumerWidget {
   void _retry(WidgetRef ref) {
     ref.invalidate(transactionsProvider);
     ref.invalidate(monthlyTotalsProvider);
+  }
+
+  String _periodLabel(
+    AppLocalizations l10n,
+    DateTimeRange? dateRange,
+    ExpenseCategory? filter,
+  ) {
+    if (dateRange != null) {
+      return filter == null
+          ? l10n.inThisRange
+          : l10n.categoryInRange(filter.localizedName(l10n));
+    }
+    return filter == null
+        ? l10n.thisMonth
+        : l10n.categoryThisMonth(filter.localizedName(l10n));
   }
 }
 
@@ -215,6 +260,30 @@ class _MonthSelector extends ConsumerWidget {
           icon: const Icon(Icons.chevron_right),
         ),
       ],
+    );
+  }
+}
+
+class _DateRangeChip extends ConsumerWidget {
+  const _DateRangeChip({required this.dateRange});
+
+  final DateTimeRange dateRange;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final localeName = Localizations.localeOf(context).toString();
+    return Align(
+      child: Chip(
+        key: const Key('dashboard-date-filter-chip'),
+        avatar: const Icon(Icons.date_range_outlined, size: 18),
+        label: Text(
+          '${formatDay(dateRange.start, localeName)} – '
+          '${formatDay(dateRange.end, localeName)}',
+        ),
+        onDeleted: () => ref.read(dashboardDateRangeProvider.notifier).clear(),
+        deleteButtonTooltipMessage: l10n.clearDateFilterTooltip,
+      ),
     );
   }
 }

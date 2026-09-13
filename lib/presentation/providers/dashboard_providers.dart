@@ -59,6 +59,28 @@ final currencySymbolProvider = StateProvider<String>(
 /// transaction, matching the screen's original behavior.
 final historyDateRangeProvider = StateProvider<DateTimeRange?>((ref) => null);
 
+/// Optional From/To range on the dashboard, replacing the selected-month
+/// view (pie chart + list) while set. Null shows the usual whole-month view.
+class DashboardDateRangeNotifier extends Notifier<DateTimeRange?> {
+  @override
+  DateTimeRange? build() => null;
+
+  void setRange(DateTimeRange range) {
+    state = range;
+    ref.read(categoryFilterProvider.notifier).clear();
+  }
+
+  void clear() {
+    state = null;
+    ref.read(categoryFilterProvider.notifier).clear();
+  }
+}
+
+final dashboardDateRangeProvider =
+    NotifierProvider<DashboardDateRangeNotifier, DateTimeRange?>(
+      DashboardDateRangeNotifier.new,
+    );
+
 /// True when [date] falls within [range], inclusive of the whole end day
 /// regardless of the transaction's time of day.
 bool isInDateRange(DateTime date, DateTimeRange range) {

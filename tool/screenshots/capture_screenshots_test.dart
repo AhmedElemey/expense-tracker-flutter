@@ -783,4 +783,57 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '3_detail_filter_cleared');
   });
+
+  testWidgets('filter the dashboard by a date range', (tester) async {
+    const flow = 'dashboard_date_filter';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    // All within the current month so the default single-month calendar
+    // view can select them without paging.
+    final now = DateTime.now();
+    Future<void> seed(int day, ExpenseCategory category, String note) =>
+        repository.insertTransaction(
+          Expense(
+            amount: 20,
+            category: category,
+            date: DateTime(now.year, now.month, day, 12),
+            note: note,
+          ),
+        );
+    await seed(1, ExpenseCategory.food, 'Early in the month');
+    await seed(10, ExpenseCategory.transport, 'Range start');
+    await seed(15, ExpenseCategory.transport, 'Middle of range');
+    await seed(25, ExpenseCategory.food, 'Late in the month');
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_dashboard_unfiltered');
+
+    await tester.tap(find.byKey(const Key('dashboard-date-filter')));
+    await tester.pumpAndSettle();
+
+    // Pick day 10 as the start and day 20 as the end of the range. The
+    // range picker keeps adjacent months mounted in its scrollable, so
+    // `.first` targets the current (visible) page's cell; its confirm
+    // action is labeled "Save" (not "OK", which is the single-date
+    // picker's label).
+    await tester.tap(find.text('10').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('20').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_dashboard_filtered');
+
+    await tester.tap(find.byIcon(Icons.cancel));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_dashboard_filter_cleared');
+  });
 }

@@ -769,6 +769,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No transfers in this date range.'**
   String get noTransfersInRange;
+
+  /// No description provided for @spentInRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent in this range'**
+  String get spentInRange;
+
+  /// No description provided for @inThisRange.
+  ///
+  /// In en, this message translates to:
+  /// **'In this range'**
+  String get inThisRange;
+
+  /// No description provided for @categoryInRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} in this range'**
+  String categoryInRange(String category);
 }
 
 class _AppLocalizationsDelegate

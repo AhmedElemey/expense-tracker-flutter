@@ -42,13 +42,18 @@ final transactionsProvider =
       TransactionsNotifier.new,
     );
 
-/// Dashboard list: selected month, optionally one category (pie-slice filter).
+/// Dashboard list: selected month (or, if set, a custom date range),
+/// optionally narrowed further by one category (pie-slice filter).
 final filteredTransactionsProvider = Provider<AsyncValue<List<Expense>>>((ref) {
   final month = ref.watch(selectedMonthProvider);
+  final dateRange = ref.watch(dashboardDateRangeProvider);
   final category = ref.watch(categoryFilterProvider);
   return ref.watch(transactionsProvider).whenData((items) {
     return items.where((item) {
-      if (!_inMonth(item.date, month)) {
+      final inDateWindow = dateRange != null
+          ? isInDateRange(item.date, dateRange)
+          : _inMonth(item.date, month);
+      if (!inDateWindow) {
         return false;
       }
       if (category != null && item.category != category) {
