@@ -283,6 +283,68 @@ void main() {
     await capture(tester, repaintKey, flow, '4_account_detail_screen');
   });
 
+  testWidgets('transfer between your own accounts (Visa -> Cash)', (
+    tester,
+  ) async {
+    const flow = 'visa_to_cash';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    await accountRepository.insertAccount(
+      Account(
+        name: 'Visa',
+        type: AccountType.card,
+        initialBalance: 1500,
+        colorValue: 0xFF1565C0,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+    final cashId = await accountRepository.insertAccount(
+      Account(
+        name: 'Cash',
+        type: AccountType.cash,
+        initialBalance: 200,
+        colorValue: 0xFF2E7D32,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+
+    await tester.tap(find.byTooltip('Accounts'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_accounts_before');
+
+    await tester.tap(find.text('Visa'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_visa_before');
+
+    await tester.tap(find.byTooltip('Add transfer'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('transfer-amount')), '300');
+    await tester.enterText(
+      find.byKey(const Key('transfer-note')),
+      'Cash withdrawal',
+    );
+    await capture(tester, repaintKey, flow, '3_add_transfer_visa_to_cash');
+
+    await tester.tap(find.byKey(const Key('transfer-save')));
+    await settleWithRealIo(tester);
+    await capture(tester, repaintKey, flow, '4_visa_after');
+
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key('account-$cashId')));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '5_cash_after');
+  });
+
   testWidgets('transfer to someone else, with a receipt attached', (
     tester,
   ) async {
