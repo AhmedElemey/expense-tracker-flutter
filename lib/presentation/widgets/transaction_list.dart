@@ -155,7 +155,7 @@ class _HistorySectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ColoredBox(
+    return Material(
       color: isThisMonth
           ? theme.colorScheme.primaryContainer.withValues(alpha: 0.28)
           : Colors.transparent,
