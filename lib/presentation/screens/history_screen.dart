@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/l10n/app_localizations.dart';
+import 'package:expensetracker/presentation/format.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
@@ -24,9 +25,21 @@ class HistoryScreen extends ConsumerWidget {
     final history = ref.watch(transactionsProvider);
     final grouping = ref.watch(historyGroupingProvider);
     final currencySymbol = ref.watch(currencySymbolProvider);
+    final dateRange = ref.watch(historyDateRangeProvider);
+    final localeName = Localizations.localeOf(context).toString();
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.historyTitle)),
+      appBar: AppBar(
+        title: Text(l10n.historyTitle),
+        actions: [
+          IconButton(
+            key: const Key('history-date-filter'),
+            tooltip: l10n.filterByDateTooltip,
+            onPressed: () => _pickDateRange(context, ref, dateRange),
+            icon: const Icon(Icons.date_range_outlined),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -54,6 +67,25 @@ class HistoryScreen extends ConsumerWidget {
               ),
             ),
           ),
+          if (dateRange != null)
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Chip(
+                  key: const Key('history-date-filter-chip'),
+                  avatar: const Icon(Icons.date_range_outlined, size: 18),
+                  label: Text(
+                    '${formatDay(dateRange.start, localeName)} – '
+                    '${formatDay(dateRange.end, localeName)}',
+                  ),
+                  onDeleted: () =>
+                      ref.read(historyDateRangeProvider.notifier).state =
+                          null,
+                  deleteButtonTooltipMessage: l10n.clearDateFilterTooltip,
+                ),
+              ),
+            ),
           Expanded(
             child: history.when(
               skipLoadingOnReload: true,
@@ -62,23 +94,51 @@ class HistoryScreen extends ConsumerWidget {
                 message: l10n.couldNotLoadHistory(error),
                 onRetry: () => ref.invalidate(transactionsProvider),
               ),
-              data: (items) => TransactionList(
-                transactions: items,
-                grouping: grouping,
-                currencySymbol: currencySymbol,
-                markThisMonth: true,
-                emptyMessage: l10n.noExpensesYet,
-                onRefresh: () =>
-                    ref.read(transactionsProvider.notifier).refresh(),
-                onEdit: (transaction) =>
-                    AddExpenseScreen.open(context, existing: transaction),
-                onDelete: (expense) => _deleteWithUndo(context, ref, expense),
-              ),
+              data: (items) {
+                final filtered = dateRange == null
+                    ? items
+                    : items
+                          .where((e) => isInDateRange(e.date, dateRange))
+                          .toList();
+                return TransactionList(
+                  transactions: filtered,
+                  grouping: grouping,
+                  currencySymbol: currencySymbol,
+                  markThisMonth: true,
+                  emptyMessage: dateRange == null
+                      ? l10n.noExpensesYet
+                      : l10n.noExpensesInRange,
+                  onRefresh: () =>
+                      ref.read(transactionsProvider.notifier).refresh(),
+                  onEdit: (transaction) =>
+                      AddExpenseScreen.open(context, existing: transaction),
+                  onDelete: (expense) =>
+                      _deleteWithUndo(context, ref, expense),
+                );
+              },
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _pickDateRange(
+    BuildContext context,
+    WidgetRef ref,
+    DateTimeRange? current,
+  ) async {
+    final now = DateTime.now();
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(now.year + 5, 12, 31),
+      initialDateRange: current,
+    );
+    if (picked == null) {
+      return;
+    }
+    ref.read(historyDateRangeProvider.notifier).state = picked;
   }
 
   Future<void> _deleteWithUndo(

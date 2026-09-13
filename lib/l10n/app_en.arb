@@ -188,5 +188,8 @@
   "paidFromNone": "None",
   "showArchivedAccounts": "Show archived accounts",
   "hideArchivedAccounts": "Hide archived accounts",
-  "archivedLabel": "Archived"
+  "archivedLabel": "Archived",
+  "filterByDateTooltip": "Filter by date",
+  "clearDateFilterTooltip": "Clear date filter",
+  "noExpensesInRange": "No expenses in this date range."
 }

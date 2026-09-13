@@ -745,6 +745,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archived'**
   String get archivedLabel;
+
+  /// No description provided for @filterByDateTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by date'**
+  String get filterByDateTooltip;
+
+  /// No description provided for @clearDateFilterTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear date filter'**
+  String get clearDateFilterTooltip;
+
+  /// No description provided for @noExpensesInRange.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses in this date range.'**
+  String get noExpensesInRange;
 }
 
 class _AppLocalizationsDelegate

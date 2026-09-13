@@ -644,4 +644,63 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '3_restored_after_undo');
   });
+
+  testWidgets('filter history by a date range', (tester) async {
+    const flow = 'history_date_filter';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    // All within the current month so the default single-month calendar
+    // view can select them without paging.
+    final now = DateTime.now();
+    Future<void> seed(int day, String note) => repository.insertTransaction(
+      Expense(
+        amount: 20,
+        category: ExpenseCategory.food,
+        date: DateTime(now.year, now.month, day, 12),
+        note: note,
+      ),
+    );
+    await seed(1, 'Early in the month');
+    await seed(10, 'Range start');
+    await seed(15, 'Middle of range');
+    await seed(25, 'Late in the month');
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('History'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_history_unfiltered');
+
+    await tester.tap(find.byKey(const Key('history-date-filter')));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '2_date_range_picker_open');
+
+    // Pick day 10 as the start and day 20 as the end of the range. The
+    // range picker keeps adjacent months mounted in its scrollable, so
+    // several equal day-number Texts can exist at once — `.first` is the
+    // current (visible) page's cell.
+    await tester.tap(find.text('10').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('20').first);
+    await tester.pumpAndSettle();
+    // The range picker's confirm action is labeled "Save" (the single-date
+    // picker instead uses "OK" — different Material localizations).
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_history_filtered');
+
+    // Chip's own tap target only covers its label; the delete affordance
+    // is the separate cancel icon it renders (no custom deleteIcon set).
+    await tester.tap(find.byIcon(Icons.cancel));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '4_filter_cleared');
+  });
 }

@@ -107,5 +107,8 @@
   "paidFromNone": "بدون",
   "showArchivedAccounts": "إظهار الحسابات المؤرشفة",
   "hideArchivedAccounts": "إخفاء الحسابات المؤرشفة",
-  "archivedLabel": "مؤرشف"
+  "archivedLabel": "مؤرشف",
+  "filterByDateTooltip": "تصفية حسب التاريخ",
+  "clearDateFilterTooltip": "إزالة تصفية التاريخ",
+  "noExpensesInRange": "لا توجد مصروفات ضمن هذا النطاق الزمني."
 }

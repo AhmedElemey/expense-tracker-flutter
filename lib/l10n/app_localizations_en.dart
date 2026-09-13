@@ -370,4 +370,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get archivedLabel => 'Archived';
+
+  @override
+  String get filterByDateTooltip => 'Filter by date';
+
+  @override
+  String get clearDateFilterTooltip => 'Clear date filter';
+
+  @override
+  String get noExpensesInRange => 'No expenses in this date range.';
 }

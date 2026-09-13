@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:expensetracker/domain/entities/expense_category.dart';
@@ -53,3 +54,23 @@ final selectedMonthProvider = NotifierProvider<SelectedMonthNotifier, DateTime>(
 final currencySymbolProvider = StateProvider<String>(
   (ref) => kDefaultCurrencySymbol,
 );
+
+/// Optional From/To range narrowing the History screen. Null shows every
+/// transaction, matching the screen's original behavior.
+final historyDateRangeProvider = StateProvider<DateTimeRange?>((ref) => null);
+
+/// True when [date] falls within [range], inclusive of the whole end day
+/// regardless of the transaction's time of day.
+bool isInDateRange(DateTime date, DateTimeRange range) {
+  final start = DateTime(range.start.year, range.start.month, range.start.day);
+  final end = DateTime(
+    range.end.year,
+    range.end.month,
+    range.end.day,
+    23,
+    59,
+    59,
+    999,
+  );
+  return !date.isBefore(start) && !date.isAfter(end);
+}

@@ -374,4 +374,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get archivedLabel => 'مؤرشف';
+
+  @override
+  String get filterByDateTooltip => 'تصفية حسب التاريخ';
+
+  @override
+  String get clearDateFilterTooltip => 'إزالة تصفية التاريخ';
+
+  @override
+  String get noExpensesInRange => 'لا توجد مصروفات ضمن هذا النطاق الزمني.';
 }
