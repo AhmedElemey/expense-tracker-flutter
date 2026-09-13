@@ -289,7 +289,8 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get noAccountsYet => 'لا توجد حسابات بعد.\nاضغط + لإضافة بطاقة أو نقد.';
+  String get noAccountsYet =>
+      'لا توجد حسابات بعد.\nاضغط + لإضافة بطاقة أو نقد.';
 
   @override
   String get totalBalance => 'الرصيد الإجمالي';
