@@ -542,4 +542,57 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '3_detail_after_edit');
   });
+
+  testWidgets('edit an existing expense', (tester) async {
+    const flow = 'edit_expense';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    final visaId = await accountRepository.insertAccount(
+      Account(
+        name: 'Visa',
+        type: AccountType.card,
+        initialBalance: 1500,
+        colorValue: 0xFF1565C0,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+    final now = DateTime.now();
+    final lunchId = await repository.insertTransaction(
+      Expense(
+        amount: 12.5,
+        category: ExpenseCategory.food,
+        date: DateTime(now.year, now.month, now.day, 12, 30),
+        note: 'Lunch with the team',
+      ),
+    );
+    await accountRepository.setExpenseAccount(lunchId, visaId);
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+    await tester.pumpAndSettle();
+
+    // Prefilled from the existing expense: amount, category, note, date,
+    // and the linked "paid from" account.
+    await tester.tap(find.text('Lunch with the team'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_edit_prefilled');
+
+    await tester.enterText(find.byKey(const Key('expense-amount')), '18');
+    await tester.tap(find.byKey(const Key('category-transport')));
+    await tester.enterText(
+      find.byKey(const Key('expense-note')),
+      'Lunch + taxi back',
+    );
+    await capture(tester, repaintKey, flow, '2_edit_changed');
+
+    await tester.tap(find.byKey(const Key('expense-save')));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_dashboard_after_edit');
+  });
 }
