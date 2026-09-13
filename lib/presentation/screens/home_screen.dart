@@ -11,6 +11,7 @@ import 'package:expensetracker/presentation/providers/ads_tracking_provider.dart
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/monthly_totals_provider.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
+import 'package:expensetracker/presentation/screens/accounts_screen.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
 import 'package:expensetracker/presentation/screens/history_screen.dart';
 import 'package:expensetracker/presentation/screens/settings_screen.dart';
@@ -37,6 +38,11 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.appTitle),
         actions: [
+          IconButton(
+            tooltip: l10n.accountsTitle,
+            onPressed: () => AccountsScreen.open(context),
+            icon: const Icon(Icons.credit_card_outlined),
+          ),
           IconButton(
             tooltip: l10n.historyTooltip,
             onPressed: () => HistoryScreen.open(context),

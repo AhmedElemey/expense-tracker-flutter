@@ -54,6 +54,10 @@
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to photograph the receipt of a transfer to someone else.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to attach an existing screenshot as a transfer's receipt.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

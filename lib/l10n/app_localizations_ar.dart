@@ -241,4 +241,136 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get categoryOther => 'أخرى';
+
+  @override
+  String get accountsTitle => 'الحسابات';
+
+  @override
+  String get addAccountTitle => 'إضافة حساب';
+
+  @override
+  String get editAccountTitle => 'تعديل الحساب';
+
+  @override
+  String get accountNameLabel => 'الاسم';
+
+  @override
+  String get accountNameHint => 'مثال: فيزا، محفظة نقدية';
+
+  @override
+  String get enterAccountName => 'أدخل اسمًا';
+
+  @override
+  String get accountTypeLabel => 'النوع';
+
+  @override
+  String get accountTypeCard => 'بطاقة';
+
+  @override
+  String get accountTypeCash => 'نقدًا';
+
+  @override
+  String get accountInitialBalanceLabel => 'الرصيد الابتدائي';
+
+  @override
+  String get enterValidAmount => 'أدخل مبلغًا صحيحًا';
+
+  @override
+  String get accountColorLabel => 'اللون';
+
+  @override
+  String couldNotSaveAccount(Object error) {
+    return 'تعذّر حفظ الحساب: $error';
+  }
+
+  @override
+  String couldNotLoadAccounts(Object error) {
+    return 'تعذّر تحميل الحسابات: $error';
+  }
+
+  @override
+  String get noAccountsYet => 'لا توجد حسابات بعد.\nاضغط + لإضافة بطاقة أو نقد.';
+
+  @override
+  String get totalBalance => 'الرصيد الإجمالي';
+
+  @override
+  String get archiveAccount => 'أرشفة الحساب';
+
+  @override
+  String get unarchiveAccount => 'إلغاء أرشفة الحساب';
+
+  @override
+  String get accountArchived => 'تمت أرشفة هذا الحساب.';
+
+  @override
+  String get noTransfersYet => 'لا توجد تحويلات بعد.\nاضغط + لتسجيل واحدة.';
+
+  @override
+  String couldNotLoadTransfers(Object error) {
+    return 'تعذّر تحميل التحويلات: $error';
+  }
+
+  @override
+  String get addTransferTitle => 'إضافة تحويل';
+
+  @override
+  String get transferToLabel => 'تحويل إلى';
+
+  @override
+  String get transferToAccount => 'حسابي';
+
+  @override
+  String get transferToPerson => 'شخص آخر';
+
+  @override
+  String get transferToAccountLabel => 'إلى حساب';
+
+  @override
+  String get noOtherAccounts => 'أضف حسابًا آخر أولاً';
+
+  @override
+  String get recipientNameLabel => 'اسم المستلم';
+
+  @override
+  String get receiptLabel => 'إيصال';
+
+  @override
+  String get takePhoto => 'التقاط صورة';
+
+  @override
+  String get chooseFromGallery => 'اختيار من المعرض';
+
+  @override
+  String get enterRecipientName => 'أدخل اسم المستلم';
+
+  @override
+  String couldNotSaveTransfer(Object error) {
+    return 'تعذّر حفظ التحويل: $error';
+  }
+
+  @override
+  String transferToName(String name) {
+    return 'إلى $name';
+  }
+
+  @override
+  String transferFromName(String name) {
+    return 'من $name';
+  }
+
+  @override
+  String get paidFromLabel => 'الدفع من';
+
+  @override
+  String get paidFromNone => 'بدون';
+
+  @override
+  String get showArchivedAccounts => 'إظهار الحسابات المؤرشفة';
+
+  @override
+  String get hideArchivedAccounts => 'إخفاء الحسابات المؤرشفة';
+
+  @override
+  String get archivedLabel => 'مؤرشف';
 }

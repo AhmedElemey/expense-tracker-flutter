@@ -238,4 +238,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryOther => 'Other';
+
+  @override
+  String get accountsTitle => 'Accounts';
+
+  @override
+  String get addAccountTitle => 'Add account';
+
+  @override
+  String get editAccountTitle => 'Edit account';
+
+  @override
+  String get accountNameLabel => 'Name';
+
+  @override
+  String get accountNameHint => 'e.g. Visa, Cash wallet';
+
+  @override
+  String get enterAccountName => 'Enter a name';
+
+  @override
+  String get accountTypeLabel => 'Type';
+
+  @override
+  String get accountTypeCard => 'Card';
+
+  @override
+  String get accountTypeCash => 'Cash';
+
+  @override
+  String get accountInitialBalanceLabel => 'Starting balance';
+
+  @override
+  String get enterValidAmount => 'Enter a valid amount';
+
+  @override
+  String get accountColorLabel => 'Color';
+
+  @override
+  String couldNotSaveAccount(Object error) {
+    return 'Could not save account: $error';
+  }
+
+  @override
+  String couldNotLoadAccounts(Object error) {
+    return 'Could not load accounts: $error';
+  }
+
+  @override
+  String get noAccountsYet => 'No accounts yet.\nTap + to add a card or cash.';
+
+  @override
+  String get totalBalance => 'Total balance';
+
+  @override
+  String get archiveAccount => 'Archive account';
+
+  @override
+  String get unarchiveAccount => 'Unarchive account';
+
+  @override
+  String get accountArchived => 'This account was archived.';
+
+  @override
+  String get noTransfersYet => 'No transfers yet.\nTap + to record one.';
+
+  @override
+  String couldNotLoadTransfers(Object error) {
+    return 'Could not load transfers: $error';
+  }
+
+  @override
+  String get addTransferTitle => 'Add transfer';
+
+  @override
+  String get transferToLabel => 'Transfer to';
+
+  @override
+  String get transferToAccount => 'My account';
+
+  @override
+  String get transferToPerson => 'Someone else';
+
+  @override
+  String get transferToAccountLabel => 'To account';
+
+  @override
+  String get noOtherAccounts => 'Add another account first';
+
+  @override
+  String get recipientNameLabel => 'Recipient name';
+
+  @override
+  String get receiptLabel => 'Receipt';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from gallery';
+
+  @override
+  String get enterRecipientName => 'Enter the recipient\'s name';
+
+  @override
+  String couldNotSaveTransfer(Object error) {
+    return 'Could not save transfer: $error';
+  }
+
+  @override
+  String transferToName(String name) {
+    return 'To $name';
+  }
+
+  @override
+  String transferFromName(String name) {
+    return 'From $name';
+  }
+
+  @override
+  String get paidFromLabel => 'Paid from';
+
+  @override
+  String get paidFromNone => 'None';
+
+  @override
+  String get showArchivedAccounts => 'Show archived accounts';
+
+  @override
+  String get hideArchivedAccounts => 'Hide archived accounts';
+
+  @override
+  String get archivedLabel => 'Archived';
 }

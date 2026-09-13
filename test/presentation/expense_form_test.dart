@@ -7,23 +7,29 @@ import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/main.dart';
+import 'package:expensetracker/presentation/providers/account_providers.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/screens/add_expense_screen.dart';
 
+import '../domain/fake_account_repository.dart';
 import '../domain/fake_transaction_repository.dart';
 
 void main() {
   late FakeTransactionRepository repository;
+  late FakeAccountRepository accountRepository;
+
+  List<Override> overrides() => [
+    transactionRepositoryProvider.overrideWithValue(repository),
+    accountRepositoryProvider.overrideWithValue(accountRepository),
+  ];
 
   Widget app() {
-    return ProviderScope(
-      overrides: [transactionRepositoryProvider.overrideWithValue(repository)],
-      child: const ExpenseTrackerApp(),
-    );
+    return ProviderScope(overrides: overrides(), child: const ExpenseTrackerApp());
   }
 
   setUp(() {
     repository = FakeTransactionRepository();
+    accountRepository = FakeAccountRepository();
     SharedPreferences.setMockInitialValues({});
   });
 
@@ -126,9 +132,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          transactionRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: overrides(),
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -193,9 +197,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          transactionRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: overrides(),
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

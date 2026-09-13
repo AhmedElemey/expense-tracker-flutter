@@ -6,6 +6,7 @@ import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/l10n/app_localizations.dart';
 import 'package:expensetracker/presentation/format.dart';
+import 'package:expensetracker/presentation/providers/account_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/providers/transactions_provider.dart';
 import 'package:expensetracker/presentation/widgets/category_chip.dart';
@@ -30,6 +31,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
   late ExpenseCategory _category;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   var _saving = false;
+  int? _accountId;
 
   bool get _isEditing => widget.existing != null;
 
@@ -44,6 +46,19 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
     _customCategoryController.text = existing?.customCategory ?? '';
     _date = existing?.date ?? DateTime.now();
     _category = existing?.category ?? ExpenseCategory.food;
+    _loadAccount();
+  }
+
+  Future<void> _loadAccount() async {
+    final existingId = widget.existing?.id;
+    if (existingId == null) {
+      return;
+    }
+    final accountId = await ref.read(getExpenseAccountProvider)(existingId);
+    if (!mounted) {
+      return;
+    }
+    setState(() => _accountId = accountId);
   }
 
   @override
@@ -128,6 +143,11 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
               validator: _validateCustomCategory,
             ),
           ],
+          const SizedBox(height: 16),
+          _AccountPicker(
+            selectedId: _accountId,
+            onChanged: (id) => setState(() => _accountId = id),
+          ),
           const SizedBox(height: 16),
           TextFormField(
             key: const Key('expense-note'),
@@ -219,11 +239,15 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
     setState(() => _saving = true);
     try {
       final notifier = ref.read(transactionsProvider.notifier);
+      final int savedId;
       if (_isEditing) {
         await notifier.edit(expense);
+        savedId = expense.id!;
       } else {
-        await notifier.add(expense);
+        savedId = (await notifier.add(expense)).id!;
       }
+      await ref.read(setExpenseAccountProvider)(savedId, _accountId);
+      ref.invalidate(accountsProvider);
       widget.onSaved?.call();
     } catch (error) {
       if (!mounted) {
@@ -252,5 +276,43 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
       return amount.toStringAsFixed(0);
     }
     return amount.toString();
+  }
+}
+
+/// Optional "paid from" account. Hidden entirely once the user has no
+/// accounts, so the form stays unchanged for anyone not using that feature.
+class _AccountPicker extends ConsumerWidget {
+  const _AccountPicker({required this.selectedId, required this.onChanged});
+
+  final int? selectedId;
+  final ValueChanged<int?> onChanged;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final accounts = ref.watch(activeAccountsProvider).valueOrNull ?? const [];
+    if (accounts.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final l10n = AppLocalizations.of(context);
+    final validId = accounts.any((a) => a.account.id == selectedId)
+        ? selectedId
+        : null;
+    return DropdownButtonFormField<int?>(
+      key: const Key('expense-account'),
+      initialValue: validId,
+      decoration: InputDecoration(
+        labelText: l10n.paidFromLabel,
+        prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
+      ),
+      items: [
+        DropdownMenuItem(value: null, child: Text(l10n.paidFromNone)),
+        for (final accountBalance in accounts)
+          DropdownMenuItem(
+            value: accountBalance.account.id,
+            child: Text(accountBalance.account.name),
+          ),
+      ],
+      onChanged: onChanged,
+    );
   }
 }

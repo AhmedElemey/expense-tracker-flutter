@@ -118,5 +118,75 @@
   "categoryEntertainment": "Entertainment",
   "categoryShopping": "Shopping",
   "categoryHealth": "Health",
-  "categoryOther": "Other"
+  "categoryOther": "Other",
+  "accountsTitle": "Accounts",
+  "addAccountTitle": "Add account",
+  "editAccountTitle": "Edit account",
+  "accountNameLabel": "Name",
+  "accountNameHint": "e.g. Visa, Cash wallet",
+  "enterAccountName": "Enter a name",
+  "accountTypeLabel": "Type",
+  "accountTypeCard": "Card",
+  "accountTypeCash": "Cash",
+  "accountInitialBalanceLabel": "Starting balance",
+  "enterValidAmount": "Enter a valid amount",
+  "accountColorLabel": "Color",
+  "couldNotSaveAccount": "Could not save account: {error}",
+  "@couldNotSaveAccount": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "couldNotLoadAccounts": "Could not load accounts: {error}",
+  "@couldNotLoadAccounts": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "noAccountsYet": "No accounts yet.\nTap + to add a card or cash.",
+  "totalBalance": "Total balance",
+  "archiveAccount": "Archive account",
+  "unarchiveAccount": "Unarchive account",
+  "accountArchived": "This account was archived.",
+  "noTransfersYet": "No transfers yet.\nTap + to record one.",
+  "couldNotLoadTransfers": "Could not load transfers: {error}",
+  "@couldNotLoadTransfers": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "addTransferTitle": "Add transfer",
+  "transferToLabel": "Transfer to",
+  "transferToAccount": "My account",
+  "transferToPerson": "Someone else",
+  "transferToAccountLabel": "To account",
+  "noOtherAccounts": "Add another account first",
+  "recipientNameLabel": "Recipient name",
+  "receiptLabel": "Receipt",
+  "takePhoto": "Take photo",
+  "chooseFromGallery": "Choose from gallery",
+  "enterRecipientName": "Enter the recipient's name",
+  "couldNotSaveTransfer": "Could not save transfer: {error}",
+  "@couldNotSaveTransfer": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+  "transferToName": "To {name}",
+  "@transferToName": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "transferFromName": "From {name}",
+  "@transferFromName": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "paidFromLabel": "Paid from",
+  "paidFromNone": "None",
+  "showArchivedAccounts": "Show archived accounts",
+  "hideArchivedAccounts": "Hide archived accounts",
+  "archivedLabel": "Archived"
 }

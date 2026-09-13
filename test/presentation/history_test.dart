@@ -6,14 +6,17 @@ import 'package:expensetracker/domain/entities/expense_category.dart';
 import 'package:expensetracker/domain/entities/expense.dart';
 import 'package:expensetracker/main.dart';
 import 'package:expensetracker/presentation/format.dart';
+import 'package:expensetracker/presentation/providers/account_providers.dart';
 import 'package:expensetracker/presentation/providers/app_providers.dart';
 import 'package:expensetracker/presentation/providers/dashboard_providers.dart';
 import 'package:expensetracker/presentation/widgets/transaction_list.dart';
 
+import '../domain/fake_account_repository.dart';
 import '../domain/fake_transaction_repository.dart';
 
 void main() {
   late FakeTransactionRepository repository;
+  late FakeAccountRepository accountRepository;
 
   Expense expense({
     required int id,
@@ -33,13 +36,17 @@ void main() {
 
   Widget app() {
     return ProviderScope(
-      overrides: [transactionRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        transactionRepositoryProvider.overrideWithValue(repository),
+        accountRepositoryProvider.overrideWithValue(accountRepository),
+      ],
       child: const ExpenseTrackerApp(),
     );
   }
 
   setUp(() {
     repository = FakeTransactionRepository();
+    accountRepository = FakeAccountRepository();
   });
 
   test('groupTransactions buckets by day and month in newest-first order', () {

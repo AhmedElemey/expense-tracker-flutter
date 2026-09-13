@@ -505,6 +505,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get categoryOther;
+
+  /// No description provided for @accountsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts'**
+  String get accountsTitle;
+
+  /// No description provided for @addAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add account'**
+  String get addAccountTitle;
+
+  /// No description provided for @editAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit account'**
+  String get editAccountTitle;
+
+  /// No description provided for @accountNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get accountNameLabel;
+
+  /// No description provided for @accountNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Visa, Cash wallet'**
+  String get accountNameHint;
+
+  /// No description provided for @enterAccountName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name'**
+  String get enterAccountName;
+
+  /// No description provided for @accountTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get accountTypeLabel;
+
+  /// No description provided for @accountTypeCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get accountTypeCard;
+
+  /// No description provided for @accountTypeCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get accountTypeCash;
+
+  /// No description provided for @accountInitialBalanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting balance'**
+  String get accountInitialBalanceLabel;
+
+  /// No description provided for @enterValidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount'**
+  String get enterValidAmount;
+
+  /// No description provided for @accountColorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get accountColorLabel;
+
+  /// No description provided for @couldNotSaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save account: {error}'**
+  String couldNotSaveAccount(Object error);
+
+  /// No description provided for @couldNotLoadAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load accounts: {error}'**
+  String couldNotLoadAccounts(Object error);
+
+  /// No description provided for @noAccountsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No accounts yet.\nTap + to add a card or cash.'**
+  String get noAccountsYet;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total balance'**
+  String get totalBalance;
+
+  /// No description provided for @archiveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive account'**
+  String get archiveAccount;
+
+  /// No description provided for @unarchiveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive account'**
+  String get unarchiveAccount;
+
+  /// No description provided for @accountArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'This account was archived.'**
+  String get accountArchived;
+
+  /// No description provided for @noTransfersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No transfers yet.\nTap + to record one.'**
+  String get noTransfersYet;
+
+  /// No description provided for @couldNotLoadTransfers.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load transfers: {error}'**
+  String couldNotLoadTransfers(Object error);
+
+  /// No description provided for @addTransferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add transfer'**
+  String get addTransferTitle;
+
+  /// No description provided for @transferToLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer to'**
+  String get transferToLabel;
+
+  /// No description provided for @transferToAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'My account'**
+  String get transferToAccount;
+
+  /// No description provided for @transferToPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else'**
+  String get transferToPerson;
+
+  /// No description provided for @transferToAccountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'To account'**
+  String get transferToAccountLabel;
+
+  /// No description provided for @noOtherAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another account first'**
+  String get noOtherAccounts;
+
+  /// No description provided for @recipientNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient name'**
+  String get recipientNameLabel;
+
+  /// No description provided for @receiptLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get receiptLabel;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @enterRecipientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the recipient\'s name'**
+  String get enterRecipientName;
+
+  /// No description provided for @couldNotSaveTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save transfer: {error}'**
+  String couldNotSaveTransfer(Object error);
+
+  /// No description provided for @transferToName.
+  ///
+  /// In en, this message translates to:
+  /// **'To {name}'**
+  String transferToName(String name);
+
+  /// No description provided for @transferFromName.
+  ///
+  /// In en, this message translates to:
+  /// **'From {name}'**
+  String transferFromName(String name);
+
+  /// No description provided for @paidFromLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid from'**
+  String get paidFromLabel;
+
+  /// No description provided for @paidFromNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get paidFromNone;
+
+  /// No description provided for @showArchivedAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived accounts'**
+  String get showArchivedAccounts;
+
+  /// No description provided for @hideArchivedAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide archived accounts'**
+  String get hideArchivedAccounts;
+
+  /// No description provided for @archivedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archivedLabel;
 }
 
 class _AppLocalizationsDelegate

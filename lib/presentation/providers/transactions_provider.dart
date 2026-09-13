@@ -12,9 +12,10 @@ class TransactionsNotifier extends AsyncNotifier<List<Expense>> {
     return ref.watch(getHistoryProvider)();
   }
 
-  Future<void> add(Expense expense) async {
-    await ref.read(addExpenseProvider)(expense);
+  Future<Expense> add(Expense expense) async {
+    final saved = await ref.read(addExpenseProvider)(expense);
     await _reload();
+    return saved;
   }
 
   Future<void> edit(Expense expense) async {
