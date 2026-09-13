@@ -128,14 +128,14 @@ class _TransferFormState extends ConsumerState<TransferForm> {
                   onChanged: (id) => setState(() => _toAccountId = id),
                 )
               else
-                _PersonDestinationField(
-                  nameController: _personNameController,
-                  imagePath: _pickedImagePath,
-                  onPickCamera: () => _pickImage(ImageSource.camera),
-                  onPickGallery: () => _pickImage(ImageSource.gallery),
-                  onRemoveImage: () =>
-                      setState(() => _pickedImagePath = null),
-                ),
+                _PersonDestinationField(nameController: _personNameController),
+              const SizedBox(height: 16),
+              _ReceiptPicker(
+                imagePath: _pickedImagePath,
+                onPickCamera: () => _pickImage(ImageSource.camera),
+                onPickGallery: () => _pickImage(ImageSource.gallery),
+                onRemoveImage: () => setState(() => _pickedImagePath = null),
+              ),
               const SizedBox(height: 16),
               TextFormField(
                 key: const Key('transfer-note'),
@@ -308,15 +308,35 @@ class _AccountDestinationField extends StatelessWidget {
 }
 
 class _PersonDestinationField extends StatelessWidget {
-  const _PersonDestinationField({
-    required this.nameController,
+  const _PersonDestinationField({required this.nameController});
+
+  final TextEditingController nameController;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return TextFormField(
+      key: const Key('transfer-person-name'),
+      controller: nameController,
+      textCapitalization: TextCapitalization.words,
+      decoration: InputDecoration(
+        labelText: l10n.recipientNameLabel,
+        prefixIcon: const Icon(Icons.person_outline),
+      ),
+    );
+  }
+}
+
+/// Optional receipt/screenshot, available for any transfer destination —
+/// a card↔cash move (e.g. an ATM slip) or a payment to a person alike.
+class _ReceiptPicker extends StatelessWidget {
+  const _ReceiptPicker({
     required this.imagePath,
     required this.onPickCamera,
     required this.onPickGallery,
     required this.onRemoveImage,
   });
 
-  final TextEditingController nameController;
   final String? imagePath;
   final VoidCallback onPickCamera;
   final VoidCallback onPickGallery;
@@ -328,16 +348,6 @@ class _PersonDestinationField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextFormField(
-          key: const Key('transfer-person-name'),
-          controller: nameController,
-          textCapitalization: TextCapitalization.words,
-          decoration: InputDecoration(
-            labelText: l10n.recipientNameLabel,
-            prefixIcon: const Icon(Icons.person_outline),
-          ),
-        ),
-        const SizedBox(height: 12),
         Text(l10n.receiptLabel, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
         if (imagePath != null)
