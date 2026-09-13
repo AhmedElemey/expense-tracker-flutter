@@ -494,4 +494,52 @@ void main() {
     await tester.pumpAndSettle();
     await capture(tester, repaintKey, flow, '5_detail_after_unarchive');
   });
+
+  testWidgets('edit an existing account', (tester) async {
+    const flow = 'edit_account';
+    await loadRealFonts();
+    setPhoneSurface(tester);
+    final repaintKey = GlobalKey();
+
+    await accountRepository.insertAccount(
+      Account(
+        name: 'Visa',
+        type: AccountType.card,
+        initialBalance: 1500,
+        colorValue: 0xFF1565C0,
+        createdAt: DateTime(2026, 8, 1),
+      ),
+    );
+
+    await pumpApp(
+      tester,
+      repaintKey,
+      transactions: repository,
+      accounts: accountRepository,
+    );
+
+    await tester.tap(find.byTooltip('Accounts'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Visa'));
+    await tester.pumpAndSettle();
+
+    // Prefilled from the existing account: name, type, starting balance.
+    await tester.tap(find.byTooltip('Edit account'));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '1_edit_prefilled');
+
+    await tester.enterText(
+      find.byKey(const Key('account-name')),
+      'Visa Platinum',
+    );
+    await tester.enterText(
+      find.byKey(const Key('account-initial-balance')),
+      '1800',
+    );
+    await capture(tester, repaintKey, flow, '2_edit_changed');
+
+    await tester.tap(find.byKey(const Key('account-save')));
+    await tester.pumpAndSettle();
+    await capture(tester, repaintKey, flow, '3_detail_after_edit');
+  });
 }
